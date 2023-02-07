@@ -8,7 +8,7 @@ CREATE TABLE bill (
 	`bill_name` varchar(255),
 	`type` int,
 	`total_amount` bigint,
-	`create_time` datetime
+	`create_time` datetime DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE bill_detail (

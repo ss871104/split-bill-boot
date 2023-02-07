@@ -3,6 +3,9 @@ package com.menstalk.billservice.domain;
 import lombok.*;
 
 import javax.persistence.*;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.time.LocalDateTime;
 
 @Getter
@@ -22,6 +25,7 @@ public class Bill {
 	private String billName;
 	private Integer type;	
 	private Long totalAmount;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDateTime createTime;
 
 }

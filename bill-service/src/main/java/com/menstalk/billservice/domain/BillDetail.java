@@ -21,6 +21,4 @@ public class BillDetail {
 	private String billDetailName;
 	private Integer billType;
 	private Long amount;
-	
-
 }
