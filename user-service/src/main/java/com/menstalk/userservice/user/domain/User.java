@@ -1,4 +1,4 @@
-package com.menstalk.userservice.domain;
+package com.menstalk.userservice.user.domain;
 
 import lombok.*;
 
