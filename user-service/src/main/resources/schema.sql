@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS users;
 
 create table users(
-    user_id bigint not null primary key,
+    user_id bigint not null auto_increment primary key,
     uname varchar(255),
     username varchar(255) not null unique,
     email varchar(255) not null unique,
