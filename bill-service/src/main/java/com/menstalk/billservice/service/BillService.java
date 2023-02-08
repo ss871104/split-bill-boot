@@ -6,8 +6,9 @@ import com.menstalk.billservice.domain.Bill;
 
 public interface BillService {
 	
-	public List<Bill> selectByPartyId(Long id);
+	public List<Bill> selectByPartyId(Long partyId);
 	public boolean addBillAA(Bill bill);
-	public boolean remove(Long id);
+	public boolean updateBill(Long billId);
+	public boolean remove(Long billId);
 
 }
