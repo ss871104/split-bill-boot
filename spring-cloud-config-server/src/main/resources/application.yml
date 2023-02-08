@@ -10,3 +10,5 @@ spring:
         git:
           uri: https://github.com/ss871104/split-bill-config-server
           default-label: main
+          username: ss871104
+          password: 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
