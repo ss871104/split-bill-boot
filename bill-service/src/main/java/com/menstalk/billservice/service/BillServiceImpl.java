@@ -40,6 +40,20 @@ public class BillServiceImpl implements BillService{
 	}
 
 	@Override
+	public boolean updateBill(Long billId) {
+		
+		try {
+			billRepository.updateBill(billId);
+			
+			return true;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
 	public boolean remove(Long id) {
 		// TODO Auto-generated method stub
 		return false;

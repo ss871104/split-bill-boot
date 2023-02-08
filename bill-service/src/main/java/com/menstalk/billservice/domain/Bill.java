@@ -4,8 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
 import java.time.LocalDateTime;
 
 @Getter
@@ -19,13 +17,19 @@ public class Bill {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="bill_id")
 	private Long billId;
+	@Column(name="party_id")
 	private Long partyId;
+	@Column(name="member_id")
 	private Long memberId;
+	@Column(name="bill_name")
 	private String billName;
-	private Integer type;	
+	private Integer type;
+	@Column(name="total_amount")
 	private Long totalAmount;
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "create_time", updatable = false, insertable = false, nullable = false,
+	        columnDefinition = "datetime default CURRENT_TIMESTAMP")
 	private LocalDateTime createTime;
 
 }
