@@ -1,4 +1,4 @@
-package com.menstalk.apigateway.security.filter;
+package com.menstalk.apigateway.filter;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.config.CorsRegistry;

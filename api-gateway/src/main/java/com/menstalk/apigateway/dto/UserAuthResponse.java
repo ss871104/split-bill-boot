@@ -1,6 +1,5 @@
-package com.menstalk.userservice.authentication.dto;
+package com.menstalk.apigateway.dto;
 
-import com.menstalk.userservice.user.domain.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

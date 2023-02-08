@@ -6,6 +6,7 @@ import com.menstalk.userservice.authentication.dto.TokenResponse;
 import com.menstalk.userservice.authentication.jwt.JwtUtil;
 import com.menstalk.userservice.user.domain.Role;
 import com.menstalk.userservice.authentication.dto.UserAuthResponse;
+import com.menstalk.userservice.user.domain.User;
 import com.menstalk.userservice.user.mapper.UserConvert;
 import com.menstalk.userservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -45,10 +46,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public TokenResponse login(LoginRequest loginRequest) {
-        UserAuthResponse userAuthResponse = userRepository.findByUsernameOrEmail(loginRequest.getUsername()).orElseThrow();
+        User user = userRepository.findByUsernameOrEmail(loginRequest.getUsername()).orElseThrow();
 
-        if (passwordEncoder.encode(loginRequest.getPassword()).equals(userAuthResponse.getPassword())) {
-            String jwtToken = jwtUtil.generateToken(userAuthResponse);
+        if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
+            String jwtToken = jwtUtil.generateToken(userConvert.userConvertToAuth(user));
 
             return TokenResponse.builder()
                     .successful(true)
@@ -62,8 +63,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public Optional<UserAuthResponse> authentication(String username) {
-        return userRepository.findByUsernameOrEmail(username);
+    public UserAuthResponse authentication(String username) {
+        return userConvert.userConvertToAuth(userRepository.findByUsernameOrEmail(username).orElseThrow());
     }
 
 }

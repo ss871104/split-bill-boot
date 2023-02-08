@@ -7,8 +7,9 @@ import com.menstalk.userservice.authentication.dto.UserAuthResponse;
 import com.menstalk.userservice.authentication.service.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -18,7 +19,7 @@ public class AuthController {
     private final AuthenticationService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<TokenResponse> register(@RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<TokenResponse> register(@RequestBody @Valid RegisterRequest registerRequest) {
         return ResponseEntity.ok(authService.register(registerRequest));
     }
 
@@ -29,6 +30,6 @@ public class AuthController {
 
     @PostMapping("/authentication")
     public ResponseEntity<UserAuthResponse> authentication(@RequestBody String username) {
-        return ResponseEntity.ok(authService.authentication(username).orElseThrow(() -> new UsernameNotFoundException("User not found")));
+        return ResponseEntity.ok(authService.authentication(username));
     }
 }
