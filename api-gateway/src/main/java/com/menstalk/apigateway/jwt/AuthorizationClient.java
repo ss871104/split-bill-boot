@@ -28,4 +28,17 @@ public class AuthorizationClient {
         return Mono.just(userDetails);
     }
 
+    public boolean ifTokenInBlackList(String token, ServerWebExchange exchange) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<String> request =
+                new HttpEntity<String>(token, headers);
+        String url = "http://" + exchange.getRequest().getURI().getHost() + "/api/auth/checkBlackList";
+        ResponseEntity<Boolean> responseEntity = new RestTemplate().postForEntity(url, request, Boolean.class);
+        Boolean ifTokenInBlackList = responseEntity
+                .getBody();
+
+        return ifTokenInBlackList;
+    }
+
 }

@@ -31,7 +31,7 @@ public class JwtAuthenticationFilter implements GlobalFilter , Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         ServerHttpRequest request = (ServerHttpRequest) exchange.getRequest();
 
-        final List<String> apiEndpoints = List.of("/api/auth/register", "/api/auth/login", "/api/auth/authentication");
+        final List<String> apiEndpoints = List.of("/api/auth/register", "/api/auth/login", "/api/auth/authentication", "/api/auth/logout", "/api/auth/checkBlackList");
 
         Predicate<ServerHttpRequest> isApiSecured = r -> apiEndpoints.stream()
                 .noneMatch(uri -> r.getURI().getPath().contains(uri));
@@ -45,19 +45,24 @@ public class JwtAuthenticationFilter implements GlobalFilter , Ordered {
             final String token = request.getHeaders().getOrEmpty("Authorization").get(0);
 
             if (!token.startsWith("Bearer ")) {
-                ServerHttpResponse response = exchange.getResponse();
 
                 return jwtExceptionHandler.tokenException(exchange, HttpStatus.UNAUTHORIZED, "Invalid token");
 
             }
 
+            final String jwt = token.substring(7);
+
+            if (this.authorizationClient.ifTokenInBlackList(jwt, exchange)) {
+
+                return jwtExceptionHandler.tokenException(exchange, HttpStatus.BAD_REQUEST, "Jwt Token blackList");
+            }
+
             try {
-                String jwt = token.substring(7);
                 String username = this.jwtUtil.extractUsername(jwt);
                 UserAuthResponse userDetails = this.authorizationClient.findByUsername(username, exchange).block();
 
                 if (username != null && jwtUtil.isTokenValid(jwt, userDetails)) {
-                    exchange.getRequest().mutate().header("id", username).build();
+                    exchange.getRequest().mutate().header("id", userDetails.getUserId() + "").build();
                 } else{
 
                     return jwtExceptionHandler.tokenException(exchange, HttpStatus.BAD_REQUEST, "Invalid JWT token");

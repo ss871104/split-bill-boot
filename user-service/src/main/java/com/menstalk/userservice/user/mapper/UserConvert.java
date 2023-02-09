@@ -11,9 +11,9 @@ import org.mapstruct.factory.Mappers;
 public interface UserConvert {
     UserConvert INSTANCE = Mappers.getMapper(UserConvert.class);
 
-    User authConvertToUser(UserAuthResponse userAuthResponse);
-    UserAuthResponse userConvertToAuth(User user);
+    UserAuthResponse userConvertToAuthResponse(User user);
     @Mapping(target = "password", ignore = true)
+    @Mapping(target = "registerTime", dateFormat = "yyyy-MM-dd HH:mm:ss")
     UserResponse userConvertToUserResponse(User user);
 
 }
