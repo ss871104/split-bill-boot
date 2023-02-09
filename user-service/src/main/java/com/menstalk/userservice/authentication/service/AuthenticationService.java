@@ -10,6 +10,7 @@ import java.util.Optional;
 public interface AuthenticationService {
     public TokenResponse register(RegisterRequest registerRequest);
     public TokenResponse login(LoginRequest loginRequest);
-
-    public Optional<UserAuthResponse> authentication(String username);
+    public UserAuthResponse authentication(String username);
+    public void logout(String token);
+    public boolean checkBlackList(String token);
 }

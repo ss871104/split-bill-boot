@@ -5,10 +5,7 @@ import com.menstalk.userservice.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/user")
@@ -16,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<UserResponse> getByUserId(@PathVariable Long userId) {
-        return new ResponseEntity<>(userService.getByUserId(userId), HttpStatus.OK);
+    @GetMapping("/info")
+    public ResponseEntity<UserResponse> getByUserId(@RequestHeader(name = "id") String userId) {
+        return new ResponseEntity<>(userService.getByUserId(Long.valueOf(userId)), HttpStatus.OK);
     }
 
 }

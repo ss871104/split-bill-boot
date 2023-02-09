@@ -12,14 +12,14 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest {
-    @NotBlank(message = "姓名不得為空")
+    @NotBlank(message = "Name is required")
     private String name;
-    @Size(min = 8,  max = 20, message = "帳號長度不得低於 8 或大於 20")
+    @Size(min = 8,  max = 20, message = "Length of Username must be 8 ~ 20")
     private String username;
-    @Size(min = 8,  max = 20, message = "密碼長度不得低於 8 或大於 20")
+    @Size(min = 8,  max = 20, message = "Length of Password must be 8 ~ 20")
     private String password;
-    @Size(max = 255, message = "Email 長度不得大於 255")
-    @Email(message = "Email 格式不正確")
-    @NotBlank(message = "信箱不得為空")
+    @Size(max = 255, message = "Length of Email must not exceed 255")
+    @Email(message = "Invalid Email")
+    @NotBlank(message = "Email is required")
     private String email;
 }
