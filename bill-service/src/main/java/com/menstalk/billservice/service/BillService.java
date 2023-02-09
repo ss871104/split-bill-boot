@@ -8,7 +8,7 @@ public interface BillService {
 	
 	public List<Bill> selectByPartyId(Long partyId);
 	public boolean addBillAA(Bill bill);
-	public boolean updateBill(Long billId);
-	public boolean remove(Long billId);
+	public boolean updateBill(Bill bill);
+	public boolean removeBill(Long billId);
 
 }

@@ -15,10 +15,15 @@ public class BillDetail {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name="bill_detail_id")
 	private Long billDetailId;
+	@Column(name="bill_id")
 	private Long billId;
+	@Column(name="member_id")
 	private Long memberId;
+	@Column(name="bill_detail_name")
 	private String billDetailName;
+	@Column(name="bill_type")
 	private Integer billType;
 	private Long amount;
 }
