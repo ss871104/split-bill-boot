@@ -23,7 +23,8 @@ public class BillDetail {
 	private Long memberId;
 	@Column(name="bill_detail_name")
 	private String billDetailName;
-	@Column(name="bill_type")
-	private Integer billType;
+	@Column(name="bill_detail_type")
+	@Enumerated(EnumType.ORDINAL)
+	private BillDetailType billDetailType;
 	private Long amount;
 }

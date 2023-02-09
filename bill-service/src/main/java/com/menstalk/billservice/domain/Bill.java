@@ -25,7 +25,9 @@ public class Bill {
 	private Long memberId;
 	@Column(name="bill_name")
 	private String billName;
-	private Integer type;
+	@Column(name="bill_type")
+	@Enumerated(EnumType.ORDINAL)
+	private BillType billType;
 	@Column(name="total_amount")
 	private Long totalAmount;
 	@Column(name = "create_time", updatable = false, insertable = false, nullable = false,

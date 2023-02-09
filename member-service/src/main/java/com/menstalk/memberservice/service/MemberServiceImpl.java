@@ -2,14 +2,14 @@ package com.menstalk.memberservice.service;
 
 import org.springframework.stereotype.Service;
 
-import com.menstalk.memberservice.domin.Member;
+import com.menstalk.memberservice.domain.Member;
 import com.menstalk.memberservice.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class MemberServicelmpl implements MemberService {
+public class MemberServiceImpl implements MemberService {
 
 	private final MemberRepository memberRepository;
 	@Override

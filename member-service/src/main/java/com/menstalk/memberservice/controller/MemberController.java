@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.menstalk.memberservice.domin.Member;
+import com.menstalk.memberservice.domain.Member;
 import com.menstalk.memberservice.service.MemberService;
 
 import lombok.RequiredArgsConstructor;

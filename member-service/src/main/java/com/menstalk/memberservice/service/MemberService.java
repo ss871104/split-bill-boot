@@ -1,8 +1,6 @@
 package com.menstalk.memberservice.service;
 
-import java.util.List;
-
-import com.menstalk.memberservice.domin.Member;
+import com.menstalk.memberservice.domain.Member;
 
 public interface MemberService {
 

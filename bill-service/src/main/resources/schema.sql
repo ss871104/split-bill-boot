@@ -6,7 +6,7 @@ CREATE TABLE bill (
 	`party_id` bigint,
 	`member_id` bigint,
 	`bill_name` varchar(255),
-	`type` int,
+	`bill_type` int,
 	`total_amount` bigint,
 	`create_time` datetime DEFAULT CURRENT_TIMESTAMP
 );
@@ -16,6 +16,6 @@ CREATE TABLE bill_detail (
 	`bill_id` bigint,
 	`member_id` bigint,
 	`bill_detail_name` varchar(255),
-	`bill_type` int,
+	`bill_detail_type` int,
 	`amount` bigint
 );

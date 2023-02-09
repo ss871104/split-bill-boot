@@ -1,4 +1,4 @@
-package com.menstalk.memberservice.domin;
+package com.menstalk.memberservice.domain;
 
 import lombok.*;
 
@@ -23,7 +23,7 @@ public class Member {
 	private Long userId;
 	private Long balance;
 	private String memberNickname;
-	private Integer memberStatus;
+	private MemberStatus memberStatus;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDateTime createTime;
 }
