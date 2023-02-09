@@ -14,7 +14,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-
 public class Member {
 
 	@Id
