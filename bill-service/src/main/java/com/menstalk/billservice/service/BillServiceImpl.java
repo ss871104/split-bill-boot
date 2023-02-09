@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.menstalk.billservice.domain.Bill;
 import com.menstalk.billservice.repository.BillRepository;
+import com.menstalk.billservice.repository.BillDetailRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -15,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 public class BillServiceImpl implements BillService{
 	
 	private final BillRepository billRepository;
+	private final BillDetailRepository billDetailRepository;
 
 	@Override
 	public List<Bill> selectByPartyId(Long partyId) {
@@ -25,7 +27,7 @@ public class BillServiceImpl implements BillService{
 	}
 
 	@Override
-	public boolean addBillAA(Bill bill) {
+	public boolean addBillAA(Bill bill) {		
 		
 		try {
 			billRepository.save(bill);
@@ -40,10 +42,10 @@ public class BillServiceImpl implements BillService{
 	}
 
 	@Override
-	public boolean updateBill(Long billId) {
+	public boolean updateBill(Bill billId) {
 		
 		try {
-			billRepository.updateBill(billId);
+			billRepository.save(billId);
 			
 			return true;
 			
@@ -54,9 +56,16 @@ public class BillServiceImpl implements BillService{
 	}
 
 	@Override
-	public boolean remove(Long id) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean removeBill(Long billId) {
+		try {
+			billRepository.deleteById(billId);
+			
+			return true;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 }

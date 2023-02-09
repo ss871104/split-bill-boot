@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,12 +48,23 @@ public class BillController {
 	}
 	
 	@PutMapping("/update")
-	public ResponseEntity<String> updateBill(@RequestBody Long billId) {
+	public ResponseEntity<String> updateBill(@RequestBody Bill bill) {
 		
-		if(billService.updateBill(billId)) {
+		if(billService.updateBill(bill)) {
 			return new ResponseEntity<String>("修改成功", HttpStatus.ACCEPTED);			
 		}else {
 			return new ResponseEntity<String>("修改失敗", HttpStatus.NOT_ACCEPTABLE);			
+			
+		}					
+	}
+	
+	@DeleteMapping("/delete/{billId}")
+	public ResponseEntity<String> removeBill(@PathVariable Long billId) {
+		
+		if(billService.removeBill(billId)) {
+			return new ResponseEntity<String>("刪除成功", HttpStatus.ACCEPTED);			
+		}else {
+			return new ResponseEntity<String>("刪除失敗", HttpStatus.NOT_ACCEPTABLE);			
 			
 		}					
 	}
