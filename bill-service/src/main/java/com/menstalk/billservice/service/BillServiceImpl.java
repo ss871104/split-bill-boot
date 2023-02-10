@@ -6,6 +6,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.menstalk.billservice.domain.Bill;
 import com.menstalk.billservice.domain.BillDetail;
@@ -19,6 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class BillServiceImpl implements BillService{
 	
 	private final BillRepository billRepository;
