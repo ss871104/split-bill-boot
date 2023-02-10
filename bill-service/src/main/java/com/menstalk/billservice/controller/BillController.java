@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.menstalk.billservice.domain.Bill;
+import com.menstalk.billservice.domain.BillType;
+import com.menstalk.billservice.dto.BillPlacedRequest;
 import com.menstalk.billservice.service.BillService;
 
 import lombok.RequiredArgsConstructor;
@@ -31,20 +33,32 @@ public class BillController {
 	@GetMapping("/{partyId}")
 	@ResponseStatus(HttpStatus.OK)
 	public List<Bill> selectById(@PathVariable Long partyId) {
-		
+
 		return billService.selectByPartyId(partyId);
 		
 	}
 	
-	@PostMapping("/addAA")
-	public ResponseEntity<String> addBillAA(@RequestBody Bill billAA) {
+	@PostMapping("/add")
+	public ResponseEntity<String> addBill(@RequestBody BillPlacedRequest billPlacedRequest) {
 		
-		if(billService.addBillAA(billAA)) {
-			return new ResponseEntity<String>("新增成功", HttpStatus.ACCEPTED);			
-		}else {
-			return new ResponseEntity<String>("新增失敗", HttpStatus.NOT_ACCEPTABLE);			
-			
-		}					
+		if (billPlacedRequest.getBillType() == BillType.AA) {
+			billService.addBillAA(billPlacedRequest);
+		} else if (billPlacedRequest.getBillType() == BillType.GO_DUTCH) {
+			billService.addBillGoDutch(billPlacedRequest);
+		} else if (billPlacedRequest.getBillType() == BillType.TRANSFER) {
+			billService.addBillTransfer(billPlacedRequest);
+		} else {
+			return new ResponseEntity<String>("新增失敗", HttpStatus.BAD_REQUEST);
+		}
+		
+		return new ResponseEntity<String>("新增成功", HttpStatus.ACCEPTED);
+		
+//		if(billService.addBillAA(billAA)) {
+//			return new ResponseEntity<String>("新增成功", HttpStatus.ACCEPTED);			
+//		}else {
+//			return new ResponseEntity<String>("新增失敗", HttpStatus.NOT_ACCEPTABLE);			
+//			
+//		}					
 	}
 	
 	@PutMapping("/update")

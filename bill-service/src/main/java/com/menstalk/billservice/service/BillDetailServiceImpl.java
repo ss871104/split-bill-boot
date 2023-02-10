@@ -23,10 +23,10 @@ public class BillDetailServiceImpl implements BillDetailService {
 	}
 
 	@Override
-	public boolean addBillDetail(BillDetail billDetail) {
+	public boolean addBillDetail(List<BillDetail> billDetailList) {
 		
 		try {
-			billDetailRepository.save(billDetail);
+			billDetailRepository.saveAll(billDetailList);
 			
 			return true;
 			

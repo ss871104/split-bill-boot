@@ -7,7 +7,7 @@ import com.menstalk.billservice.domain.BillDetail;
 public interface BillDetailService {
 	
 	public List<BillDetail> selectByBillId(Long billId);
-	public boolean addBillDetail(BillDetail billDetail);
+	public boolean addBillDetail(List<BillDetail> billDetailList);
 	public boolean removeBillDetail(Long billDetailId);
 
 }
