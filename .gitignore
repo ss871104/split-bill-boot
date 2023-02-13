@@ -30,3 +30,4 @@ target
 .properties
 .component
 .prefs
+*.factorypath
