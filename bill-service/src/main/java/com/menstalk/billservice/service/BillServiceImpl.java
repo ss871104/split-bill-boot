@@ -2,7 +2,6 @@ package com.menstalk.billservice.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -14,81 +13,174 @@ import com.menstalk.billservice.domain.BillDetailType;
 import com.menstalk.billservice.dto.BillPlacedRequest;
 import com.menstalk.billservice.mapper.BillMapper;
 import com.menstalk.billservice.repository.BillRepository;
-import com.menstalk.billservice.repository.BillDetailRepository;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class BillServiceImpl implements BillService{
-	
+public class BillServiceImpl implements BillService {
+
 	private final BillRepository billRepository;
 	private final BillDetailService billDetailService;
 	private final BillMapper billMapper;
 
 	@Override
 	public List<Bill> selectByPartyId(Long partyId) {
-		
+
 		List<Bill> list = new ArrayList<>();
 		list = billRepository.findByPartyId(partyId);
 		return list;
 	}
-	
+
 	@Override
 	public boolean addBillTransfer(BillPlacedRequest billPlacedRequest) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
-	@Override
-	public boolean addBillAA(BillPlacedRequest billPlacedRequest) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean addBillGoDutch(BillPlacedRequest billPlacedRequest) {		
-		
 		try {
-			Bill bill =  billRepository.save(billMapper.billPlacedRequestToBill(billPlacedRequest));
+			Bill bill = billRepository.save(billMapper.billPlacedRequestToBill(billPlacedRequest));
 			billRepository.flush();
 			Long billId = bill.getBillId();
-			
+
 			List<BillDetail> billDetailList = billPlacedRequest.getMemberIdMap().entrySet().stream()
-												.map(x -> BillDetail.builder()
-														.billId(billId)
-														.billDetailType(BillDetailType.EXPENSE)
-														.memberId(x.getKey())
-														.amount(x.getValue())
-														.build())
-												.collect(Collectors.toList());
+											.map(x -> BillDetail.builder()
+													.billId(billId)
+													.billDetailType(BillDetailType.EXPENSE)
+													.memberId(x.getKey())
+													.amount(x.getValue())
+													.build())
+													.collect(Collectors.toList());
 			billDetailList.add(BillDetail.builder()
-										.billId(billId)
-										.billDetailType(BillDetailType.INCOME)
-										.memberId(billPlacedRequest.getMemberId())
-										.amount(billPlacedRequest.getTotalAmount())
-										.build());
-	
+									     .billId(billId)
+									     .billDetailType(BillDetailType.INCOME)
+									     .memberId(billPlacedRequest.getMemberId())
+									     .amount(billPlacedRequest.getTotalAmount())
+									     .build());
+
 			billDetailService.addBillDetail(billDetailList);
-			
+
 			return true;
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
 		}
-		
+
+	}
+
+	@Override
+	public boolean addBillAA(BillPlacedRequest billPlacedRequest) {
+		try {
+			Bill bill = billRepository.save(billMapper.billPlacedRequestToBill(billPlacedRequest));
+			billRepository.flush();
+			Long billId = bill.getBillId();
+
+			List<BillDetail> billDetailList = new ArrayList<>();
+
+			if (bill.getTotalAmount() % billPlacedRequest.getMemberIdMap().size() == 0) {
+
+				billDetailList = billPlacedRequest.getMemberIdMap().entrySet().stream()
+						.map(x -> BillDetail.builder()
+								.billId(billId).billDetailType(BillDetailType.EXPENSE)
+								.memberId(x.getKey())
+								.amount(bill.getTotalAmount() / billPlacedRequest.getMemberIdMap().size())
+								.build())
+						.collect(Collectors.toList());
+
+			} else {
+				// 金額餘數
+				int remain = (int) (bill.getTotalAmount() % billPlacedRequest.getMemberIdMap().size());
+				// 參與的 memberId
+				List<Long> memberIdList = new ArrayList<>(billPlacedRequest.getMemberIdMap().keySet());
+				// 被隨機抽到要負擔餘數的 memberId
+				List<Long> unluckyMember = new ArrayList<>();
+				// 隨機用的
+				for (int i = 0; i < remain; i++) {
+					unluckyMember.add(memberIdList.get((int) (Math.random() * memberIdList.size())));
+					memberIdList.remove(unluckyMember.get(i));
+				}
+				// 被抽到要負擔餘數的人的 billDetail
+				List<BillDetail> unluckyList = billPlacedRequest.getMemberIdMap().entrySet().stream()
+						.filter(x -> unluckyMember.contains(x.getKey()))
+						.map(x -> BillDetail.builder()
+								.billId(billId).billDetailType(BillDetailType.EXPENSE)
+								.memberId(x.getKey())
+								.amount((bill.getTotalAmount() / billPlacedRequest.getMemberIdMap().size()) + 1)
+								.build())
+						.collect(Collectors.toList());
+				// 沒被抽到要負擔餘數的人的 billDetail
+				List<BillDetail> luckyList = billPlacedRequest.getMemberIdMap().entrySet().stream()
+						.filter(x -> !unluckyMember.contains(x.getKey()))
+						.map(x -> BillDetail.builder()
+								.billId(billId).billDetailType(BillDetailType.EXPENSE)
+								.memberId(x.getKey())
+								.amount((bill.getTotalAmount() / billPlacedRequest.getMemberIdMap().size()))
+								.build())
+						.collect(Collectors.toList());
+				// 將上面兩個 list merge 起來
+				billDetailList.addAll(unluckyList);
+				billDetailList.addAll(luckyList);
+
+			}
+			// 付錢的人的 billDetail
+			billDetailList.add(BillDetail.builder()
+					.billId(billId).billDetailType(BillDetailType.INCOME)
+					.memberId(billPlacedRequest.getMemberId())
+					.amount(billPlacedRequest.getTotalAmount())
+					.build());
+			// 新增 付錢的人的 billDetail 到 list 裡面
+			billDetailService.addBillDetail(billDetailList);
+
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
+	}
+
+
+	@Override
+	public boolean addBillGoDutch(BillPlacedRequest billPlacedRequest) {
+
+		try {
+			Bill bill = billRepository.save(billMapper.billPlacedRequestToBill(billPlacedRequest));
+			billRepository.flush();
+			Long billId = bill.getBillId();
+
+			List<BillDetail> billDetailList = billPlacedRequest.getMemberIdMap().entrySet().stream()
+											.map(x -> BillDetail.builder()
+													.billId(billId)
+													.billDetailType(BillDetailType.EXPENSE)
+													.memberId(x.getKey())
+													.amount(x.getValue())
+													.build())
+													.collect(Collectors.toList());
+			billDetailList.add(BillDetail.builder()
+									     .billId(billId)
+									     .billDetailType(BillDetailType.INCOME)
+									     .memberId(billPlacedRequest.getMemberId())
+									     .amount(billPlacedRequest.getTotalAmount())
+									     .build());
+
+			billDetailService.addBillDetail(billDetailList);
+
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
 	}
 
 	@Override
 	public boolean updateBill(Bill billId) {
-		
+
 		try {
 			billRepository.save(billId);
-			
+
 			return true;
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -99,9 +191,9 @@ public class BillServiceImpl implements BillService{
 	public boolean removeBill(Long billId) {
 		try {
 			billRepository.deleteById(billId);
-			
+
 			return true;
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;

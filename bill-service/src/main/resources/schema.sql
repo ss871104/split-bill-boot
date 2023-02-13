@@ -15,7 +15,6 @@ CREATE TABLE bill_detail (
 	`bill_detail_id` bigint not null AUTO_INCREMENT primary key,
 	`bill_id` bigint,
 	`member_id` bigint,
-	`bill_detail_name` varchar(255),
 	`bill_detail_type` int,
 	`amount` bigint
 );
