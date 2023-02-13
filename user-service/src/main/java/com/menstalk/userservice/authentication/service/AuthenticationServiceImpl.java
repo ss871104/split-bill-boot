@@ -48,7 +48,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             userRepository.save(user);
             String jwtToken = jwtUtil.generateToken(userConvert.userConvertToAuthResponse(user));
 
-            redisTemplate.opsForValue().set("jwt:" + registerRequest.getUsername(), jwtToken, 30, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set("jwt:" + registerRequest.getUsername(), jwtToken, 3, TimeUnit.HOURS);
 
             return TokenResponse.builder().successful(true).token(jwtToken).build();
         } catch (Exception e) {
@@ -64,12 +64,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             String redisJwt = redisTemplate.opsForValue().get("jwt:" + loginRequest.getUsername());
             if (redisJwt != null) {
-                redisTemplate.opsForValue().set("blackList:" + redisJwt, redisJwt, 30, TimeUnit.MINUTES);
+                redisTemplate.opsForValue().set("blackList:" + redisJwt, redisJwt, 3, TimeUnit.HOURS);
             }
 
             String jwtToken = jwtUtil.generateToken(userConvert.userConvertToAuthResponse(user));
 
-            redisTemplate.opsForValue().set("jwt:" + loginRequest.getUsername(), jwtToken, 30, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set("jwt:" + loginRequest.getUsername(), jwtToken, 3, TimeUnit.HOURS);
 
             return TokenResponse.builder()
                     .successful(true)
@@ -89,7 +89,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public void logout(String token) {
-        redisTemplate.opsForValue().set("blackList:" + token, token, 30, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set("blackList:" + token, token, 3, TimeUnit.HOURS);
     }
 
     @Override
