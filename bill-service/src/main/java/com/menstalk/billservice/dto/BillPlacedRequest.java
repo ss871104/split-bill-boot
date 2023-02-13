@@ -1,13 +1,8 @@
 package com.menstalk.billservice.dto;
 
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.Map;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.menstalk.billservice.domain.BillType;
 
 import lombok.AllArgsConstructor;
@@ -18,11 +13,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class BillPlacedRequest {
+	private Long billId;
 	private Long partyId;
 	private Long memberId;
 	private String billName;
 	private BillType billType;
 	private Long totalAmount;
+	private LocalDateTime createTime;
 	private Map<Long, Long> memberIdMap;
 
 }

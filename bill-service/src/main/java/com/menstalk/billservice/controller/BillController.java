@@ -41,12 +41,12 @@ public class BillController {
 	@PostMapping("/add")
 	public ResponseEntity<String> addBill(@RequestBody BillPlacedRequest billPlacedRequest) {
 		
-		if (billPlacedRequest.getBillType() == BillType.AA) {
+		if (billPlacedRequest.getBillType() == BillType.TRANSFER) {
+			billService.addBillTransfer(billPlacedRequest);
+		} else if (billPlacedRequest.getBillType() == BillType.AA) {
 			billService.addBillAA(billPlacedRequest);
 		} else if (billPlacedRequest.getBillType() == BillType.GO_DUTCH) {
 			billService.addBillGoDutch(billPlacedRequest);
-		} else if (billPlacedRequest.getBillType() == BillType.TRANSFER) {
-			billService.addBillTransfer(billPlacedRequest);
 		} else {
 			return new ResponseEntity<String>("新增失敗", HttpStatus.BAD_REQUEST);
 		}

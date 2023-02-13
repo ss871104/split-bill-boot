@@ -21,8 +21,6 @@ public class BillDetail {
 	private Long billId;
 	@Column(name="member_id")
 	private Long memberId;
-	@Column(name="bill_detail_name")
-	private String billDetailName;
 	@Column(name="bill_detail_type")
 	@Enumerated(EnumType.ORDINAL)
 	private BillDetailType billDetailType;
