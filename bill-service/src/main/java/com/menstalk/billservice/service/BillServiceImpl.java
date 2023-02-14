@@ -1,7 +1,9 @@
 package com.menstalk.billservice.service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import com.menstalk.billservice.domain.BillDetail;
 import com.menstalk.billservice.domain.BillDetailType;
 import com.menstalk.billservice.dto.BillPlacedRequest;
 import com.menstalk.billservice.mapper.BillMapper;
+import com.menstalk.billservice.repository.BillDetailRepository;
 import com.menstalk.billservice.repository.BillRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -21,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class BillServiceImpl implements BillService {
 
 	private final BillRepository billRepository;
+	private final BillDetailRepository billDetailRepository;
 	private final BillDetailService billDetailService;
 	private final BillMapper billMapper;
 
@@ -190,8 +194,23 @@ public class BillServiceImpl implements BillService {
 	@Override
 	public boolean removeBill(Long billId) {
 		try {
+			
+			List<BillDetail> billDetailList = billDetailRepository.findByBillId(billId);
+			
+			Map<Long, Long> billDetailMapExpense = new HashMap<>();
+			billDetailList.stream()
+						.filter(x -> x.getBillDetailType() == BillDetailType.EXPENSE)
+						.forEach(x -> billDetailMapExpense.put(x.getMemberId(), x.getAmount()));
+			
+			Map<Long, Long> billDetailMapImcome = new HashMap<>();
+			billDetailList.stream()
+						.filter(x -> x.getBillDetailType() == BillDetailType.INCOME)
+						.forEach(x -> billDetailMapImcome.put(x.getMemberId(), x.getAmount()));
+			
+			billDetailService.removeBillDetail(billId);
+			
 			billRepository.deleteById(billId);
-
+			
 			return true;
 
 		} catch (Exception e) {

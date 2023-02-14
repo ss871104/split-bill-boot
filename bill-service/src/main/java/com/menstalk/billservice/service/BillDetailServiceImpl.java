@@ -41,7 +41,7 @@ public class BillDetailServiceImpl implements BillDetailService {
 		
 		try {
 			
-			billDetailRepository.deleteById(billId);
+			billDetailRepository.deleteAllByBillId(billId);
 			
 			return true;
 			
