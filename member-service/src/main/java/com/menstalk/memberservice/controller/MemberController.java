@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.menstalk.memberservice.domain.Member;
+import com.menstalk.memberservice.dto.BillAddedRequest;
 import com.menstalk.memberservice.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -59,6 +60,11 @@ public class MemberController {
 		} else {
 			return new ResponseEntity<String>("刪除失敗", HttpStatus.NOT_ACCEPTABLE);
 		}
+	}
+	
+	@PutMapping("/updateBalanceAdd")
+	public void updateBalanceByAdd(@RequestBody List<BillAddedRequest> list) {
+		memberService.updateBalanceAdd(list);
 	}
 
 }
