@@ -12,7 +12,7 @@ import com.menstalk.billservice.dto.BillAddedRequest;
 @FeignClient("member-service")
 public interface MemberProxy {
 	
-	@PutMapping("/api/member/updateBalanceAdd")
+	@PutMapping("/member-service/api/member/updateBalanceAdd")
 	public void updateBalanceByAdd(@RequestBody List<BillAddedRequest> list);
 
 }
