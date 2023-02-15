@@ -5,7 +5,6 @@ import com.menstalk.userservice.authentication.dto.RegisterRequest;
 import com.menstalk.userservice.authentication.dto.TokenResponse;
 import com.menstalk.userservice.authentication.handler.UsernameDuplicateException;
 import com.menstalk.userservice.authentication.jwt.JwtUtil;
-import com.menstalk.userservice.user.domain.Role;
 import com.menstalk.userservice.authentication.dto.UserAuthResponse;
 import com.menstalk.userservice.user.domain.User;
 import com.menstalk.userservice.user.mapper.UserConvert;
@@ -37,11 +36,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = User.builder()
                 .name(registerRequest.getName())
                 .username(registerRequest.getUsername())
-                .email(registerRequest.getEmail())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
-                .role(Role.USER)
                 .registerTime(LocalDateTime.now())
-                .emailVerified(false)
                 .build();
 
         try {
@@ -52,14 +48,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             return TokenResponse.builder().successful(true).token(jwtToken).build();
         } catch (Exception e) {
-            throw new UsernameDuplicateException("username or email duplicate");
+            throw new UsernameDuplicateException("username duplicate");
         }
 
     }
 
     @Override
     public TokenResponse login(LoginRequest loginRequest) {
-        User user = userRepository.findByUsernameOrEmail(loginRequest.getUsername()).orElseThrow();
+        User user = userRepository.findByUsername(loginRequest.getUsername()).orElseThrow();
 
         if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
             String redisJwt = redisTemplate.opsForValue().get("jwt:" + loginRequest.getUsername());
@@ -84,7 +80,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     @Cacheable(value="auth", key ="#username")
     public UserAuthResponse authentication(String username) {
-        return userConvert.userConvertToAuthResponse(userRepository.findByUsernameOrEmail(username).orElseThrow());
+        return userConvert.userConvertToAuthResponse(userRepository.findByUsername(username).orElseThrow());
     }
 
     @Override

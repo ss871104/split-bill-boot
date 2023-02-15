@@ -24,16 +24,12 @@ public class User {
     @Column(name = "uname")
     private String name;
     private String username;
-    private String email;
     @Column(name = "pwd")
     private String password;
-    @Enumerated(EnumType.ORDINAL)
-    private Role role;
     @Lob
     private byte[] profilePic;
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime registerTime;
-    private boolean emailVerified;
 
 }

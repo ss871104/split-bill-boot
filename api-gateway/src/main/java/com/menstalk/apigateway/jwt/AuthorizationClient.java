@@ -20,7 +20,7 @@ public class AuthorizationClient {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> request =
                 new HttpEntity<String>(username, headers);
-        String url = "http://" + exchange.getRequest().getURI().getHost() + "/api/auth/authentication";
+        String url = "http://" + exchange.getRequest().getURI().getHost() + "/user-service/api/auth/authentication";
         ResponseEntity<UserAuthResponse> responseEntity = new RestTemplate().postForEntity(url, request, UserAuthResponse.class);
         UserAuthResponse userDetails = responseEntity
                 .getBody();
@@ -33,7 +33,7 @@ public class AuthorizationClient {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<String> request =
                 new HttpEntity<String>(token, headers);
-        String url = "http://" + exchange.getRequest().getURI().getHost() + "/api/auth/checkBlackList";
+        String url = "http://" + exchange.getRequest().getURI().getHost() + "/user-service/api/auth/checkBlackList";
         ResponseEntity<Boolean> responseEntity = new RestTemplate().postForEntity(url, request, Boolean.class);
         Boolean ifTokenInBlackList = responseEntity
                 .getBody();
