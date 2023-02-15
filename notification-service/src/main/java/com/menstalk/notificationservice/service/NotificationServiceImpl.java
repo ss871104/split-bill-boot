@@ -1,7 +1,9 @@
 package com.menstalk.notificationservice.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import com.menstalk.notificationservice.domain.NotificationStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,8 @@ public class NotificationServiceImpl implements NotificationService {
 		// 現在要寫讓通知進到DAO再進到資料庫!!!
 		// NotificationVo newNotificationVo = notificationRepository.save(notification);
 		try {
+			notification.setStatus(NotificationStatus.UNREAD);
+			notification.setCreateTime(LocalDateTime.now());
 			notificationRepository.save(notification);
 			return true;
 		} catch (Exception e) {
@@ -33,6 +37,6 @@ public class NotificationServiceImpl implements NotificationService {
 
 	@Override
 	public List<NotificationVo> notificationVo() {
-		notificationRepository.findAll();
-		return null;
+		return notificationRepository.findAll();
+//		return null;
 	}}

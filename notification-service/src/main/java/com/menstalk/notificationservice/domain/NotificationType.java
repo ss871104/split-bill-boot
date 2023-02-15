@@ -1,8 +1,8 @@
 package com.menstalk.notificationservice.domain;
 
 public enum NotificationType {
-	OWED_WEEKLY("Weekly Account Owed Notification", ""),
-	INVITE("Invitation Notification", "Hi, kindly invite you to the party ${partyName}"),
+	OWED_WEEKLY("Weekly Account Owed Notification", "You owed $ %s in party %s , please clear your debt!"),
+	INVITE("Invitation Notification", "Hi, kindly invite you to the party %s"),
 	JOIN("New Member Join Notification", ""),
 	BILL_ADD("Bill Added Notification", ""),
 	NEW_USER("Welcome New User Notification", "");

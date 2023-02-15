@@ -29,8 +29,7 @@ public class NotificationVo {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long notificationId;
 	private Long userId;
-	@Enumerated(EnumType.ORDINAL)
-	@Column(name = "notification_type")
+	@Enumerated(EnumType.STRING)
 	private NotificationType notificationType;
 	@Enumerated(EnumType.ORDINAL)
 	private NotificationStatus status;
