@@ -12,8 +12,10 @@ import org.springframework.transaction.annotation.Transactional;
 import com.menstalk.billservice.domain.Bill;
 import com.menstalk.billservice.domain.BillDetail;
 import com.menstalk.billservice.domain.BillDetailType;
+import com.menstalk.billservice.dto.BillAddedRequest;
 import com.menstalk.billservice.dto.BillPlacedRequest;
 import com.menstalk.billservice.mapper.BillMapper;
+import com.menstalk.billservice.proxy.MemberProxy;
 import com.menstalk.billservice.repository.BillDetailRepository;
 import com.menstalk.billservice.repository.BillRepository;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ public class BillServiceImpl implements BillService {
 	private final BillDetailRepository billDetailRepository;
 	private final BillDetailService billDetailService;
 	private final BillMapper billMapper;
+	private final MemberProxy memberProxy;
 
 	@Override
 	public List<Bill> selectByPartyId(Long partyId) {
@@ -60,6 +63,14 @@ public class BillServiceImpl implements BillService {
 									     .build());
 
 			billDetailService.addBillDetail(billDetailList);
+			
+			
+			// 將BillDetailList轉型為BillAddRequest
+			List<BillAddedRequest> billAddedRequest = billDetailList.stream()
+					.map(x -> billMapper.billDetailToBillAddedRequest(x))
+					.collect(Collectors.toList());
+			// 利用OpenFeign抓updateBalance的API
+			memberProxy.updateBalanceByAdd(billAddedRequest);
 
 			return true;
 
@@ -132,6 +143,13 @@ public class BillServiceImpl implements BillService {
 					.build());
 			// 新增 付錢的人的 billDetail 到 list 裡面
 			billDetailService.addBillDetail(billDetailList);
+			
+			// 將BillDetailList轉型為BillAddRequest
+			List<BillAddedRequest> billAddedRequest = billDetailList.stream()
+					.map(x -> billMapper.billDetailToBillAddedRequest(x))
+					.collect(Collectors.toList());
+			// 利用OpenFeign抓updateBalance的API
+			memberProxy.updateBalanceByAdd(billAddedRequest);
 
 			return true;
 
@@ -167,6 +185,13 @@ public class BillServiceImpl implements BillService {
 									     .build());
 
 			billDetailService.addBillDetail(billDetailList);
+			
+			// 將BillDetailList轉型為BillAddRequest
+			List<BillAddedRequest> billAddedRequest = billDetailList.stream()
+					.map(x -> billMapper.billDetailToBillAddedRequest(x))
+					.collect(Collectors.toList());
+			// 利用OpenFeign抓updateBalance的API
+			memberProxy.updateBalanceByAdd(billAddedRequest);
 
 			return true;
 

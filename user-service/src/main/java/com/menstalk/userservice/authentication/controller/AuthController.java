@@ -26,6 +26,7 @@ public class AuthController {
             return ResponseEntity.ok(authService.register(registerRequest));
         } catch (UsernameDuplicateException e) {
             return new ResponseEntity<>(new TokenResponse("Username or Email duplicate", false), HttpStatus.BAD_REQUEST);
+            
         }
     }
 
