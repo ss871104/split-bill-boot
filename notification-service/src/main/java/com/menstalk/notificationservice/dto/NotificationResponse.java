@@ -11,6 +11,8 @@ import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.time.LocalDateTime;
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,7 +22,7 @@ public class NotificationResponse {
     private Long userId;
     private String title;
     private String content;
-//    @Enumerated(EnumType.ORDINAL)
     private NotificationStatus status;
     private LocalDateTime createTime;
+    private List<String> urlList;
 }

@@ -1,5 +1,6 @@
 package com.menstalk.notificationservice.controller;
 
+import com.menstalk.notificationservice.dto.NotificationRequest;
 import com.menstalk.notificationservice.dto.NotificationResponse;
 import org.apache.logging.log4j.message.AsynchronouslyFormattable;
 import org.springframework.http.HttpStatus;
@@ -22,9 +23,9 @@ public class NotificationController {
 	
 	private final NotificationService notificationService;
 	
-	@PostMapping("/newNotification")
-	public ResponseEntity<Boolean> addNotification(@RequestBody NotificationVo notification) { // NotificationVo是我自己設的資料型態，VO裡的所有資料可以視為一種。
-		if (notificationService.addNotification(notification)) {
+	@PostMapping("/addInvitation")
+	public ResponseEntity<Boolean> addInvitationNotification(@RequestBody NotificationRequest notificationRequest) { // NotificationVo是我自己設的資料型態，VO裡的所有資料可以視為一種。
+		if (notificationService.addInvitationNotification(notificationRequest)) {
 			return new ResponseEntity<Boolean>(true, HttpStatus.ACCEPTED);
 		} else {
 			return new ResponseEntity<Boolean>(false, HttpStatus.BAD_REQUEST);
@@ -34,15 +35,14 @@ public class NotificationController {
 	@GetMapping("/findAll")
 	public ResponseEntity<List<NotificationResponse>> findAllNotification() {
 		List<NotificationVo> list = notificationService.notificationVo();
-		String partyName = "猴子俱樂部";
 		List<NotificationResponse> reponseList = list.stream()
 				.map(x -> NotificationResponse.builder()
 						.notificationId(x.getNotificationId())
 						.userId(x.getUserId())
 						.status(x.getStatus())
 						.createTime(x.getCreateTime())
-						.title(x.getNotificationType().getTitle())
-						.content(x.getNotificationType().getContent().formatted(partyName))
+						.title(x.getTitle())
+						.content(x.getContent())
 						.build())
 				.collect(Collectors.toList());
 		return new ResponseEntity<>(reponseList, HttpStatus.OK);

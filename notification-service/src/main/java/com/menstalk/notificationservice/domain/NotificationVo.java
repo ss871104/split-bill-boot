@@ -11,15 +11,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
 @ToString
+@Builder
 @AllArgsConstructor // 全參數建構子
 @NoArgsConstructor // 無參數建構子
 @Entity // 對應資料庫類別
@@ -29,8 +26,8 @@ public class NotificationVo {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long notificationId;
 	private Long userId;
-	@Enumerated(EnumType.STRING)
-	private NotificationType notificationType;
+	private String title;
+	private String content;
 	@Enumerated(EnumType.ORDINAL)
 	private NotificationStatus status;
 	private LocalDateTime createTime;

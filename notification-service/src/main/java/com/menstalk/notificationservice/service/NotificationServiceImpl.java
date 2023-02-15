@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.menstalk.notificationservice.domain.NotificationStatus;
+import com.menstalk.notificationservice.domain.NotificationType;
+import com.menstalk.notificationservice.dto.NotificationRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -19,18 +21,23 @@ public class NotificationServiceImpl implements NotificationService {
 	private final NotificationRepository notificationRepository; // 呼叫DAo(repository)
 	
 	@Override
-	public boolean addNotification (NotificationVo notification) {
+	public boolean addInvitationNotification(NotificationRequest notificationRequest) {
 		// 現在要寫讓通知進到DAO再進到資料庫!!!
 		// NotificationVo newNotificationVo = notificationRepository.save(notification);
 		try {
-			notification.setStatus(NotificationStatus.UNREAD);
-			notification.setCreateTime(LocalDateTime.now());
+			// 需要透過 partyId 查 partyName，現在先寫死
+			NotificationVo notification = NotificationVo.builder()
+					.userId(notificationRequest.getUserIdsReceiveNotification().get(0))
+					.title(NotificationType.INVITE.getTitle())
+					.content(NotificationType.INVITE.getContent().formatted("猴子俱樂部"))
+					.status(NotificationStatus.UNREAD)
+					.createTime(LocalDateTime.now())
+					.build();
 			notificationRepository.save(notification);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();   //執行後若有錯誤印出在CONSOLE
 			return false;
-			
 		} 
 		
 }

@@ -1,11 +1,11 @@
 package com.menstalk.notificationservice.domain;
 
 public enum NotificationType {
-	OWED_WEEKLY("Weekly Account Owed Notification", "You owed $ %s in party %s , please clear your debt!"),
+	OWED_WEEKLY("Weekly Account Owed Notification", "You owed $%s in party %s , please clear your debt!"),
 	INVITE("Invitation Notification", "Hi, kindly invite you to the party %s"),
-	JOIN("New Member Join Notification", ""),
-	BILL_ADD("Bill Added Notification", ""),
-	NEW_USER("Welcome New User Notification", "");
+	JOIN("New Member Join Notification", "Welcome the new member, %s"),
+	BILL_ADD("Bill Added Notification", "New bill added in the party %s"),
+	NEW_USER("Welcome New User Notification", "Welcome %s! Thanks for having you here :)");
 	
 	private String title;
 	private String content;
