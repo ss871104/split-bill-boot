@@ -61,10 +61,14 @@ public class MemberController {
 			return new ResponseEntity<String>("刪除失敗", HttpStatus.NOT_ACCEPTABLE);
 		}
 	}
-	
+
 	@PutMapping("/updateBalanceAdd")
-	public void updateBalanceByAdd(@RequestBody List<BillAddedRequest> list) {
-		memberService.updateBalanceAdd(list);
+	public ResponseEntity<String> updateBalanceAdd(@RequestBody List<BillAddedRequest> list) {
+		if (memberService.updateBalanceAdd(list)) {
+			return new ResponseEntity<String>("修改金額成功", HttpStatus.ACCEPTED);
+		} else {
+			return new ResponseEntity<String>("修改金額失敗", HttpStatus.NOT_ACCEPTABLE);
+		}
 	}
 
 }

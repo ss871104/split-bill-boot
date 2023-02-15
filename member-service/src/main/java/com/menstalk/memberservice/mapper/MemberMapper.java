@@ -10,5 +10,7 @@ import com.menstalk.memberservice.dto.BillAddedRequest;
 public interface MemberMapper {
 	MemberMapper INSTANCE = Mappers.getMapper(MemberMapper.class);
 
-	Member dtoToMember(BillAddedRequest billAddedRequest);
+	
+
+	// Member dtoToMember(BillAddedRequest billAddedRequest);
 }
