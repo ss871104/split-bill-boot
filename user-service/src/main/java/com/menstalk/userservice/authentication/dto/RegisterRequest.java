@@ -18,8 +18,4 @@ public class RegisterRequest {
     private String username;
     @Size(min = 8,  max = 20, message = "Length of Password must be 8 ~ 20")
     private String password;
-    @Size(max = 255, message = "Length of Email must not exceed 255")
-    @Email(message = "Invalid Email")
-    @NotBlank(message = "Email is required")
-    private String email;
 }

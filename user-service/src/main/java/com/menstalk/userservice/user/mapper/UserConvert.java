@@ -12,7 +12,6 @@ public interface UserConvert {
     UserConvert INSTANCE = Mappers.getMapper(UserConvert.class);
 
     UserAuthResponse userConvertToAuthResponse(User user);
-    @Mapping(target = "password", ignore = true)
     @Mapping(target = "registerTime", dateFormat = "yyyy-MM-dd HH:mm:ss")
     UserResponse userConvertToUserResponse(User user);
 
