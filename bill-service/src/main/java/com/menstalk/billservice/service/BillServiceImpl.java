@@ -232,10 +232,17 @@ public class BillServiceImpl implements BillService {
 						.filter(x -> x.getBillDetailType() == BillDetailType.INCOME)
 						.forEach(x -> billDetailMapImcome.put(x.getMemberId(), x.getAmount()));
 			
+			// 將BillDetailList轉型為BillAddRequest
+			List<BillAddedRequest> billAddedRequest = billDetailList.stream()
+					.map(x -> billMapper.billDetailToBillAddedRequest(x))
+					.collect(Collectors.toList());
+			// 利用OpenFeign抓updateBalance的API
+			memberProxy.updateBalanceByDelete(billAddedRequest);
+						
 			billDetailService.removeBillDetail(billId);
-			
+						
 			billRepository.deleteById(billId);
-			
+									
 			return true;
 
 		} catch (Exception e) {

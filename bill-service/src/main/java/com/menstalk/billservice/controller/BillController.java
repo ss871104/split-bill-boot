@@ -53,12 +53,6 @@ public class BillController {
 		
 		return new ResponseEntity<String>("新增成功", HttpStatus.ACCEPTED);
 		
-//		if(billService.addBillAA(billAA)) {
-//			return new ResponseEntity<String>("新增成功", HttpStatus.ACCEPTED);			
-//		}else {
-//			return new ResponseEntity<String>("新增失敗", HttpStatus.NOT_ACCEPTABLE);			
-//			
-//		}					
 	}
 	
 	@PutMapping("/update")

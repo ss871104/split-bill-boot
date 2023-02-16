@@ -25,5 +25,7 @@ public class Member {
 	private String memberNickname;
 	private MemberStatus memberStatus;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	@Column(name = "create_time", updatable = false, insertable = false, nullable = false,
+    columnDefinition = "datetime default CURRENT_TIMESTAMP")
 	private LocalDateTime createTime;
 }
