@@ -20,18 +20,22 @@ import com.menstalk.billservice.domain.BillType;
 import com.menstalk.billservice.dto.BillPlacedRequest;
 import com.menstalk.billservice.service.BillService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/api/bill")
 @RequiredArgsConstructor
 @CrossOrigin
+@Api(tags = "Bill Api")
 public class BillController {
 	
 	private final BillService billService;
 	
 	@GetMapping("/{partyId}")
 	@ResponseStatus(HttpStatus.OK)
+	@ApiOperation("Show Bill by PartyId")
 	public List<Bill> selectById(@PathVariable Long partyId) {
 
 		return billService.selectByPartyId(partyId);
@@ -39,6 +43,7 @@ public class BillController {
 	}
 	
 	@PostMapping("/add")
+	@ApiOperation("Add Bill while adding BillDetail & updating Member Balance (BillType: 0=Transfer, 1=AA, 2=GoDutch)")
 	public ResponseEntity<String> addBill(@RequestBody BillPlacedRequest billPlacedRequest) {
 		
 		if (billPlacedRequest.getBillType() == BillType.TRANSFER) {
@@ -56,6 +61,7 @@ public class BillController {
 	}
 	
 	@PutMapping("/update")
+	@ApiOperation("Update Bill content")
 	public ResponseEntity<String> updateBill(@RequestBody Bill bill) {
 		
 		if(billService.updateBill(bill)) {
@@ -67,6 +73,7 @@ public class BillController {
 	}
 	
 	@DeleteMapping("/delete/{billId}")
+	@ApiOperation("Delete Bill while deleting BillDetail & updating Member Balance")
 	public ResponseEntity<String> removeBill(@PathVariable Long billId) {
 		
 		if(billService.removeBill(billId)) {
