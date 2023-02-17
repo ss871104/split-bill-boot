@@ -73,7 +73,7 @@ public class MemberController {
 			return new ResponseEntity<String>("修改金額失敗", HttpStatus.NOT_ACCEPTABLE);
 		}
 	}
-	
+
 	@PutMapping("/updateBalanceDelete")
 	public ResponseEntity<String> updateBalanceDelete(@RequestBody List<BillAddedRequest> list) {
 		if (memberService.updateBalanceDelete(list)) {
@@ -82,16 +82,20 @@ public class MemberController {
 			return new ResponseEntity<String>("修改金額失敗", HttpStatus.NOT_ACCEPTABLE);
 		}
 	}
-	
+
 	@GetMapping("/findPartyByUserId")
-	public ResponseEntity<String> findPartyByUserId(@RequestHeader (name = "id") String userId) {
-	List<PartyResponse> list = new ArrayList<>();
-		if (memberService.findPartyByUserId(Long.valueOf(userId))) {
-			return new ResponseEntity<>("修改金額成功", HttpStatus.ACCEPTED);
+	// 指定這是一個 GET 請求，可以接收路徑參數
+	public ResponseEntity<List<PartyResponse>> findPartyByUserId(@RequestHeader(name = "id") Long userId) {
+		List<PartyResponse> PartyResponseList = memberService.findPartyByUserId(Long.valueOf(userId));
+		//從 Request Header 中取得 id 參數，並轉換為 Long 型態
+		//從 memberService 中查詢出使用者 ID 為 userId 的派對列表
+		if (PartyResponseList != null && !PartyResponseList.isEmpty()) {
+			return new ResponseEntity<List<PartyResponse>>(PartyResponseList, HttpStatus.ACCEPTED);
+			// 若 list 不為空，則回傳 list 資料和 HttpStatus.ACCEPTED 狀態碼
 		} else {
-			return new ResponseEntity<>("修改金額失敗", HttpStatus.NOT_ACCEPTABLE);
+			return new ResponseEntity<List<PartyResponse>>(HttpStatus.NOT_ACCEPTABLE);
 		}
-	
+
 	}
 
 }

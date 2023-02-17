@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.menstalk.memberservice.domain.Member;
 import com.menstalk.memberservice.dto.BillAddedRequest;
 import com.menstalk.memberservice.dto.BillDetailType;
+import com.menstalk.memberservice.dto.PartyResponse;
 import com.menstalk.memberservice.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -94,7 +95,7 @@ public class MemberServiceImpl implements MemberService {
 		 * memberMapOrigin 中。 最後，memberMapOrigin 中的資料結構會是以 Long 型態的 id 當作 key，對應到 Member
 		 * 物件的資料。
 		 **/
-		
+
 		list.forEach(x -> {
 			if (x.getBillDetailType() == BillDetailType.EXPENSE) {
 				memberMapOrigin.put(x.getMemberId(), memberMapOrigin.get(x.getMemberId()))
@@ -111,7 +112,7 @@ public class MemberServiceImpl implements MemberService {
 		memberRepository.saveAll(memberList);
 		return true;
 	}
-	
+
 	@Override
 	public boolean updateBalanceDelete(List<BillAddedRequest> list) {
 
@@ -146,7 +147,7 @@ public class MemberServiceImpl implements MemberService {
 		 * memberMapOrigin 中。 最後，memberMapOrigin 中的資料結構會是以 Long 型態的 id 當作 key，對應到 Member
 		 * 物件的資料。
 		 **/
-		
+
 		list.forEach(x -> {
 			if (x.getBillDetailType() == BillDetailType.EXPENSE) {
 				memberMapOrigin.put(x.getMemberId(), memberMapOrigin.get(x.getMemberId()))
@@ -162,5 +163,12 @@ public class MemberServiceImpl implements MemberService {
 		// 把map的value(Member)轉成list
 		memberRepository.saveAll(memberList);
 		return true;
+	}
+
+	public List<PartyResponse> findPartyByUserId(Long userId) {
+
+		List<PartyResponse> PartyResponseList = new ArrayList<>();
+		memberRepository.
+		return PartyResponseList;
 	}
 }
