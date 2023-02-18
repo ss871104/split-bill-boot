@@ -11,7 +11,10 @@ public interface BillService {
 	public boolean addBillTransfer(BillPlacedRequest billPlacedRequest);
 	public boolean addBillAA(BillPlacedRequest billPlacedRequest);
 	public boolean addBillGoDutch(BillPlacedRequest billPlacedRequest);
-	public boolean updateBill(Bill bill);
 	public boolean removeBill(Long billId);
+	
+	public boolean updateBillTransfer(BillPlacedRequest billPlacedRequest);
+	public boolean updateBillAA(BillPlacedRequest billPlacedRequest);
+	public boolean updateBillGoDutch(BillPlacedRequest billPlacedRequest);
 
 }
