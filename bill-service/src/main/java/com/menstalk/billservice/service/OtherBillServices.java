@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,16 +23,13 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional
-@Primary
-public class BillServiceImpl implements BillService {
+public class OtherBillServices implements BillService {
 
 	private final BillRepository billRepository;
 	private final BillDetailRepository billDetailRepository;
 	private final BillDetailService billDetailService;
 	private final BillMapper billMapper;
 	private final MemberProxy memberProxy;
-	
-	private final OtherBillServices otherBillServices;
 
 	@Override
 	public List<Bill> selectByPartyId(Long partyId) {
@@ -206,76 +202,6 @@ public class BillServiceImpl implements BillService {
 
 	}
 
-	@Override
-	public boolean updateBillTransfer(BillPlacedRequest billPlacedRequest) {
-
-		try {
-			
-			Bill bill = billRepository.save(billMapper.billPlacedRequestToBill(billPlacedRequest));
-			billRepository.flush();
-			Long billId = bill.getBillId();
-			
-			otherBillServices.removeBill(billId);
-			
-			otherBillServices.addBillTransfer(billPlacedRequest);
-			
-			
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-
-	}
-
-
-	@Override
-	public boolean updateBillAA(BillPlacedRequest billPlacedRequest) {
-
-		try {
-			
-			Bill bill = billRepository.save(billMapper.billPlacedRequestToBill(billPlacedRequest));
-			billRepository.flush();
-			Long billId = bill.getBillId();
-			
-			otherBillServices.removeBill(billId);
-			
-			otherBillServices.addBillTransfer(billPlacedRequest);
-			
-			
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-
-	}
-
-	@Override
-	public boolean updateBillGoDutch(BillPlacedRequest billPlacedRequest) {
-
-		try {
-			
-			Bill bill = billRepository.save(billMapper.billPlacedRequestToBill(billPlacedRequest));
-			billRepository.flush();
-			Long billId = bill.getBillId();
-			
-			otherBillServices.removeBill(billId);
-			
-			otherBillServices.addBillTransfer(billPlacedRequest);
-			
-			
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-
-	}
-	
 
 	@Override
 	public boolean removeBill(Long billId) {
@@ -310,6 +236,24 @@ public class BillServiceImpl implements BillService {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	@Override
+	public boolean updateBillAA(BillPlacedRequest billPlacedRequest) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean updateBillGoDutch(BillPlacedRequest billPlacedRequest) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean updateBillTransfer(BillPlacedRequest billPlacedRequest) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }
