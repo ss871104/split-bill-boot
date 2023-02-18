@@ -1,5 +1,6 @@
 package com.menstalk.memberservice.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -11,11 +12,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.menstalk.memberservice.domain.Member;
 import com.menstalk.memberservice.dto.BillAddedRequest;
+import com.menstalk.memberservice.dto.PartyResponse;
 import com.menstalk.memberservice.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -78,6 +81,17 @@ public class MemberController {
 		} else {
 			return new ResponseEntity<String>("修改金額失敗", HttpStatus.NOT_ACCEPTABLE);
 		}
+	}
+	
+	@GetMapping("/findPartyByUserId")
+	public ResponseEntity<String> findPartyByUserId(@RequestHeader (name = "id") String userId) {
+	List<PartyResponse> list = new ArrayList<>();
+		if (memberService.findPartyByUserId(Long.valueOf(userId))) {
+			return new ResponseEntity<>("修改金額成功", HttpStatus.ACCEPTED);
+		} else {
+			return new ResponseEntity<>("修改金額失敗", HttpStatus.NOT_ACCEPTABLE);
+		}
+	
 	}
 
 }
