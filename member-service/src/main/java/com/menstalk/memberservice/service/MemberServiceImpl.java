@@ -165,10 +165,11 @@ public class MemberServiceImpl implements MemberService {
 		return true;
 	}
 
+	@Override
 	public List<PartyResponse> findPartyByUserId(Long userId) {
 
 		List<PartyResponse> PartyResponseList = new ArrayList<>();
-		memberRepository.
+		PartyResponseList = memberRepository.findPartyIdsByUserId(userId);
 		return PartyResponseList;
 	}
 }

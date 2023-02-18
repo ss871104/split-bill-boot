@@ -85,7 +85,7 @@ public class MemberController {
 
 	@GetMapping("/findPartyByUserId")
 	// 指定這是一個 GET 請求，可以接收路徑參數
-	public ResponseEntity<List<PartyResponse>> findPartyByUserId(@RequestHeader(name = "id") Long userId) {
+	public ResponseEntity<List<PartyResponse>> findPartyByUserId(@RequestHeader(name = "id") String userId) {
 		List<PartyResponse> PartyResponseList = memberService.findPartyByUserId(Long.valueOf(userId));
 		//從 Request Header 中取得 id 參數，並轉換為 Long 型態
 		//從 memberService 中查詢出使用者 ID 為 userId 的派對列表

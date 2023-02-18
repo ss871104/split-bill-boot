@@ -5,10 +5,11 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.menstalk.memberservice.domain.Member;
+import com.menstalk.memberservice.dto.PartyResponse;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
 	List<Member> findByPartyId(Long partyId);
 	
-	List<Long> findPartyIdsByUserId(Long userId);
+	List<PartyResponse> findPartyIdsByUserId(Long userId);
 }
