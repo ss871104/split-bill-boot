@@ -61,15 +61,21 @@ public class BillController {
 	}
 	
 	@PutMapping("/update")
-	@ApiOperation("Update Bill content")
-	public ResponseEntity<String> updateBill(@RequestBody Bill bill) {
+	@ApiOperation("Update Bill content (Will remove and add bill again")
+	public ResponseEntity<String> updateBill(@RequestBody BillPlacedRequest billPlacedRequest) {
 		
-		if(billService.updateBill(bill)) {
-			return new ResponseEntity<String>("修改成功", HttpStatus.ACCEPTED);			
-		}else {
-			return new ResponseEntity<String>("修改失敗", HttpStatus.NOT_ACCEPTABLE);			
-			
-		}					
+		if (billPlacedRequest.getBillType() == BillType.TRANSFER) {
+			billService.updateBillTransfer(billPlacedRequest);
+		} else if (billPlacedRequest.getBillType() == BillType.AA) {
+			billService.updateBillAA(billPlacedRequest);
+		} else if (billPlacedRequest.getBillType() == BillType.GO_DUTCH) {
+			billService.updateBillGoDutch(billPlacedRequest);
+		} else {
+			return new ResponseEntity<String>("修改失敗", HttpStatus.BAD_REQUEST);
+		}
+		
+		return new ResponseEntity<String>("修改成功", HttpStatus.ACCEPTED);
+		
 	}
 	
 	@DeleteMapping("/delete/{billId}")

@@ -25,12 +25,19 @@ public class MemberServiceImpl implements MemberService {
 	// private final MemberMapper memberMapper;
 
 	@Override
-	public List<Member> selectByPartyId(Long partyId) {
+	public List<Member> findMembersByPartyId(Long partyId) {
 		List<Member> Memberlist = new ArrayList<>();
-		Memberlist = memberRepository.findByPartyId(partyId);
+		Memberlist = memberRepository.findMemberIdsByPartyId(partyId);
 		return Memberlist;
 	}
 
+	@Override
+	public List<PartyResponse> findPartysByUserId(Long userId) {
+
+		List<PartyResponse> PartyResponseList = new ArrayList<>();
+		PartyResponseList = memberRepository.findPartysByUserId(userId);
+		return PartyResponseList;
+	}
 	@Override
 	public boolean addMembers(Member member) {
 		if (member.getMemberId() == null) {
@@ -165,10 +172,5 @@ public class MemberServiceImpl implements MemberService {
 		return true;
 	}
 
-	public List<PartyResponse> findPartyByUserId(Long userId) {
-
-		List<PartyResponse> PartyResponseList = new ArrayList<>();
-		memberRepository.
-		return PartyResponseList;
-	}
+	
 }
