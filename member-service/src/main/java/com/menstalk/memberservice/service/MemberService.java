@@ -9,7 +9,7 @@ import com.menstalk.memberservice.dto.PartyResponse;
 public interface MemberService {
 
 	public List<Member> findMembersByPartyId(Long partyId);
-	public List <PartyResponse> findPartysByUserId(Long userId);
+	public List<PartyResponse> findPartysByUserId(Long userId);
 	public boolean addMembers(Member member);
 	public boolean updateMember(Member member);
 	public boolean deleteMember(Long memberId);

@@ -17,7 +17,7 @@ import com.menstalk.memberservice.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 
-@Service
+@Service //用於標注某個類是服務類，告訴Spring容器需要將該類實例化，並且可以被其他類所引用。
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
