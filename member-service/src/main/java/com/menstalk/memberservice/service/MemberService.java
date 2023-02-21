@@ -8,6 +8,7 @@ import com.menstalk.memberservice.dto.PartyResponse;
 
 public interface MemberService {
 
+	public Long countMember(Long partyId);
 	public List<Member> findMembersByPartyId(Long partyId);
 	public List<PartyResponse> findPartysByUserId(Long userId);
 	public boolean addMembers(Member member);
@@ -16,5 +17,4 @@ public interface MemberService {
 	public boolean updateBalanceAdd(List<BillAddedRequest> list);
 	public boolean updateBalanceDelete(List<BillAddedRequest> list);
 	
-	public Long countMember(Long partyId);
 }
