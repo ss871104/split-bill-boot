@@ -20,6 +20,8 @@ public class BillPlacedRequest {
 	private BillType billType;
 	private Long totalAmount;
 	private LocalDateTime createTime;
-	private Map<Long, Long> memberIdMap;
+	private Map<Long, Long> memberIdMapExpense;
+	
+	private Map<Long, Long> memberIdMapIncome;
 
 }
