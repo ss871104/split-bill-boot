@@ -47,7 +47,7 @@ public class OtherBillServices implements BillService {
 			billRepository.flush();
 			Long billId = bill.getBillId();
 
-			List<BillDetail> billDetailList = billPlacedRequest.getMemberIdMap().entrySet().stream()
+			List<BillDetail> billDetailList = billPlacedRequest.getMemberIdMapExpense().entrySet().stream()
 											.map(x -> BillDetail.builder()
 													.billId(billId)
 													.billDetailType(BillDetailType.EXPENSE)
@@ -55,14 +55,26 @@ public class OtherBillServices implements BillService {
 													.amount(x.getValue())
 													.build())
 													.collect(Collectors.toList());
-			billDetailList.add(BillDetail.builder()
-									     .billId(billId)
-									     .billDetailType(BillDetailType.INCOME)
-									     .memberId(billPlacedRequest.getMemberId())
-									     .amount(billPlacedRequest.getTotalAmount())
-									     .build());
+			
+			List<BillDetail> billDetailList2 = billPlacedRequest.getMemberIdMapIncome().entrySet().stream()
+					.map(x -> BillDetail.builder()
+							.billId(billId)
+							.billDetailType(BillDetailType.INCOME)
+							.memberId(x.getKey())
+							.amount(x.getValue())
+							.build())
+							.collect(Collectors.toList());
+//			billDetailList.add(BillDetail.builder()
+//									     .billId(billId)
+//									     .billDetailType(BillDetailType.INCOME)
+//									     .memberId(billPlacedRequest.getMemberId())
+//									     .amount(billPlacedRequest.getTotalAmount())
+//									     .build());
 
 			billDetailService.addBillDetail(billDetailList);
+			billDetailService.addBillDetail(billDetailList2);
+			
+			billDetailList.addAll(billDetailList2);
 			
 			
 			// 將BillDetailList轉型為BillAddRequest
@@ -90,21 +102,21 @@ public class OtherBillServices implements BillService {
 
 			List<BillDetail> billDetailList = new ArrayList<>();
 
-			if (bill.getTotalAmount() % billPlacedRequest.getMemberIdMap().size() == 0) {
+			if (bill.getTotalAmount() % billPlacedRequest.getMemberIdMapExpense().size() == 0) {
 
-				billDetailList = billPlacedRequest.getMemberIdMap().entrySet().stream()
+				billDetailList = billPlacedRequest.getMemberIdMapExpense().entrySet().stream()
 						.map(x -> BillDetail.builder()
 								.billId(billId).billDetailType(BillDetailType.EXPENSE)
 								.memberId(x.getKey())
-								.amount(bill.getTotalAmount() / billPlacedRequest.getMemberIdMap().size())
+								.amount(bill.getTotalAmount() / billPlacedRequest.getMemberIdMapExpense().size())
 								.build())
 						.collect(Collectors.toList());
 
 			} else {
 				// 金額餘數
-				int remain = (int) (bill.getTotalAmount() % billPlacedRequest.getMemberIdMap().size());
+				int remain = (int) (bill.getTotalAmount() % billPlacedRequest.getMemberIdMapExpense().size());
 				// 參與的 memberId
-				List<Long> memberIdList = new ArrayList<>(billPlacedRequest.getMemberIdMap().keySet());
+				List<Long> memberIdList = new ArrayList<>(billPlacedRequest.getMemberIdMapExpense().keySet());
 				// 被隨機抽到要負擔餘數的 memberId
 				List<Long> unluckyMember = new ArrayList<>();
 				// 隨機用的
@@ -113,21 +125,21 @@ public class OtherBillServices implements BillService {
 					memberIdList.remove(unluckyMember.get(i));
 				}
 				// 被抽到要負擔餘數的人的 billDetail
-				List<BillDetail> unluckyList = billPlacedRequest.getMemberIdMap().entrySet().stream()
+				List<BillDetail> unluckyList = billPlacedRequest.getMemberIdMapExpense().entrySet().stream()
 						.filter(x -> unluckyMember.contains(x.getKey()))
 						.map(x -> BillDetail.builder()
 								.billId(billId).billDetailType(BillDetailType.EXPENSE)
 								.memberId(x.getKey())
-								.amount((bill.getTotalAmount() / billPlacedRequest.getMemberIdMap().size()) + 1)
+								.amount((bill.getTotalAmount() / billPlacedRequest.getMemberIdMapExpense().size()) + 1)
 								.build())
 						.collect(Collectors.toList());
 				// 沒被抽到要負擔餘數的人的 billDetail
-				List<BillDetail> luckyList = billPlacedRequest.getMemberIdMap().entrySet().stream()
+				List<BillDetail> luckyList = billPlacedRequest.getMemberIdMapExpense().entrySet().stream()
 						.filter(x -> !unluckyMember.contains(x.getKey()))
 						.map(x -> BillDetail.builder()
 								.billId(billId).billDetailType(BillDetailType.EXPENSE)
 								.memberId(x.getKey())
-								.amount((bill.getTotalAmount() / billPlacedRequest.getMemberIdMap().size()))
+								.amount((bill.getTotalAmount() / billPlacedRequest.getMemberIdMapExpense().size()))
 								.build())
 						.collect(Collectors.toList());
 				// 將上面兩個 list merge 起來
@@ -135,14 +147,26 @@ public class OtherBillServices implements BillService {
 				billDetailList.addAll(luckyList);
 
 			}
-			// 付錢的人的 billDetail
-			billDetailList.add(BillDetail.builder()
-					.billId(billId).billDetailType(BillDetailType.INCOME)
-					.memberId(billPlacedRequest.getMemberId())
-					.amount(billPlacedRequest.getTotalAmount())
-					.build());
-			// 新增 付錢的人的 billDetail 到 list 裡面
+			
+			List<BillDetail> billDetailList2 = billPlacedRequest.getMemberIdMapIncome().entrySet().stream()
+					.map(x -> BillDetail.builder()
+							.billId(billId)
+							.billDetailType(BillDetailType.INCOME)
+							.memberId(x.getKey())
+							.amount(x.getValue())
+							.build())
+							.collect(Collectors.toList());
+//			billDetailList.add(BillDetail.builder()
+//									     .billId(billId)
+//									     .billDetailType(BillDetailType.INCOME)
+//									     .memberId(billPlacedRequest.getMemberId())
+//									     .amount(billPlacedRequest.getTotalAmount())
+//									     .build());
+
 			billDetailService.addBillDetail(billDetailList);
+			billDetailService.addBillDetail(billDetailList2);
+			
+			billDetailList.addAll(billDetailList2);
 			
 			// 將BillDetailList轉型為BillAddRequest
 			List<BillAddedRequest> billAddedRequest = billDetailList.stream()
@@ -169,7 +193,7 @@ public class OtherBillServices implements BillService {
 			billRepository.flush();
 			Long billId = bill.getBillId();
 
-			List<BillDetail> billDetailList = billPlacedRequest.getMemberIdMap().entrySet().stream()
+			List<BillDetail> billDetailList = billPlacedRequest.getMemberIdMapExpense().entrySet().stream()
 											.map(x -> BillDetail.builder()
 													.billId(billId)
 													.billDetailType(BillDetailType.EXPENSE)
@@ -177,14 +201,26 @@ public class OtherBillServices implements BillService {
 													.amount(x.getValue())
 													.build())
 													.collect(Collectors.toList());
-			billDetailList.add(BillDetail.builder()
-									     .billId(billId)
-									     .billDetailType(BillDetailType.INCOME)
-									     .memberId(billPlacedRequest.getMemberId())
-									     .amount(billPlacedRequest.getTotalAmount())
-									     .build());
+			
+			List<BillDetail> billDetailList2 = billPlacedRequest.getMemberIdMapIncome().entrySet().stream()
+					.map(x -> BillDetail.builder()
+							.billId(billId)
+							.billDetailType(BillDetailType.INCOME)
+							.memberId(x.getKey())
+							.amount(x.getValue())
+							.build())
+							.collect(Collectors.toList());
+//			billDetailList.add(BillDetail.builder()
+//									     .billId(billId)
+//									     .billDetailType(BillDetailType.INCOME)
+//									     .memberId(billPlacedRequest.getMemberId())
+//									     .amount(billPlacedRequest.getTotalAmount())
+//									     .build());
 
 			billDetailService.addBillDetail(billDetailList);
+			billDetailService.addBillDetail(billDetailList2);
+			
+			billDetailList.addAll(billDetailList2);
 			
 			// 將BillDetailList轉型為BillAddRequest
 			List<BillAddedRequest> billAddedRequest = billDetailList.stream()
