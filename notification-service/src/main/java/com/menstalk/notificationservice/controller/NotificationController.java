@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 				// @Controller)
 @RequestMapping("/api/notification") // api 命名
 @RequiredArgsConstructor // 有參數建構子
-@CrossOrigin // 前後端分離所需
+//@CrossOrigin // 前後端分離所需
 public class NotificationController {
 
 	private final NotificationService notificationService;

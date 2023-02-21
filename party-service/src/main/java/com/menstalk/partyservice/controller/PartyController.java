@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/party")
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin
+//@CrossOrigin
 
 public class PartyController {
 

@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/bill_detail")
 @RequiredArgsConstructor
-@CrossOrigin
+//@CrossOrigin
 @Api(tags = "BillDetail Api")
 public class BillDetailController {
 	
