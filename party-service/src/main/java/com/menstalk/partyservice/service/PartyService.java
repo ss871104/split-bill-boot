@@ -12,8 +12,11 @@ public	List<Party> selectByParty(Long partyId);
 
 public boolean addParty(Party party);
 public boolean deleteParty(Long partyId);
-public boolean updateParty(Party party);
-public Long countMemberQuantityByPartyId(Long partyId);
+public boolean updateParty(Long partyId, String partyName);
+
+public boolean updateMemberQty(Long partyId, Long memberQty);
+
+
  
 
 }
