@@ -15,4 +15,6 @@ public interface MemberService {
 	public boolean deleteMember(Long memberId);
 	public boolean updateBalanceAdd(List<BillAddedRequest> list);
 	public boolean updateBalanceDelete(List<BillAddedRequest> list);
+	
+	public Long countMember(Long partyId);
 }

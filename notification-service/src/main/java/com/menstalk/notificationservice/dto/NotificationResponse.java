@@ -25,4 +25,5 @@ public class NotificationResponse {
     private NotificationStatus status;
     private LocalDateTime createTime;
     private List<String> urlList;
+    private Long partyId;
 }

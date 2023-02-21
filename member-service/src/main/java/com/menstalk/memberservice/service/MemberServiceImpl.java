@@ -172,5 +172,11 @@ public class MemberServiceImpl implements MemberService {
 		return true;
 	}
 
+	@Override
+	public Long countMember(Long partyId) {
+		
+		return memberRepository.countMember(partyId);
+	}
+
 	
 }

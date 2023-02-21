@@ -35,6 +35,11 @@ public class MemberController {
 	public List<Member> findMembersByPartyId(@PathVariable Long partyId) {
 		return memberService.findMembersByPartyId(partyId);
 	}
+	
+	@GetMapping("/countMember/{partyId}")
+	public Long countMember(@PathVariable("partyId") Long partyId) {
+		return memberService.countMember(partyId);
+	}
 
 	@GetMapping("/findPartyByUserId")
 	// 指定這是一個 GET 請求，可以接收路徑參數

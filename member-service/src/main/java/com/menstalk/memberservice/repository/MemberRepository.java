@@ -4,11 +4,10 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.menstalk.memberservice.domain.Member;
 import com.menstalk.memberservice.dto.PartyResponse;
-
-import feign.Param;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
@@ -21,5 +20,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 	//@Query(value = "SELECT * FROM party WHERE id = :id", nativeQuery = true)
 
 	List<PartyResponse> findPartysByUserId(@Param("userId") Long userId);
+	
+	@Query("SELECT COUNT(m) FROM Member m WHERE m.partyId = :partyId")
+	Long countMember(@Param("partyId") Long partyId);
 
 }
