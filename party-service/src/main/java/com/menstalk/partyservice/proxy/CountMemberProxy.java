@@ -1,4 +1,4 @@
-package com.menstalk.partyservice.memberProxy;
+package com.menstalk.partyservice.proxy;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
