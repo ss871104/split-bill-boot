@@ -30,7 +30,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 
 	private final MemberService memberService;
-
+	//這支是要給party來使用並帶回partyId,memberQuantity
 	@GetMapping("/countMember/{partyId}")
 	public Long countMember(@PathVariable("partyId") Long partyId) {
 		return memberService.countMember(partyId);

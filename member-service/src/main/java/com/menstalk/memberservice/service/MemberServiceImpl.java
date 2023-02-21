@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 public class MemberServiceImpl implements MemberService {
 
 	private final MemberRepository memberRepository;
+	
 	// private final MemberMapper memberMapper;
 
 	@Override
@@ -48,8 +49,12 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public boolean addMembers(Member member) {
 		if (member.getMemberId() == null) {
-			Member newMember = memberRepository.save(member);
-			return true;
+			memberRepository.save(member);
+//			memberService.countMember(newMember.getPartyId());
+			Long count = memberRepository.countMember(member.getPartyId());
+			if (partyProxy.updateQty(member.getPartyId(), count)) {
+				return true;
+			}
 		}
 		return false;
 
