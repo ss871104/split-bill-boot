@@ -53,9 +53,8 @@ public class MemberServiceImpl implements MemberService {
 			memberRepository.save(member);
 //			memberService.countMember(newMember.getPartyId());
 			Long memberQty = memberRepository.countMember(member.getPartyId());
-			if (updateQtyProxy.updateQty(member.getPartyId(), memberQty)) {
+			updateQtyProxy.updateQty(member.getPartyId(), memberQty);
 				return true;
-			}
 		}
 		return false;
 
