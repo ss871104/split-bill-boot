@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 public interface UpdateQtyProxy {
 
 	@PutMapping("/updateQty/{partyId}")
-	public boolean updateQty(@PathVariable Long partyId,
+	public boolean updateQty(@PathVariable("partyId") Long partyId,
 			@RequestParam(value = "memberQty", required = true) Long memberQty);
 }

@@ -1,16 +1,11 @@
 package com.menstalk.partyservice.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.menstalk.billservice.dto.BillAddedRequest;
-import com.menstalk.billservice.proxy.MemberProxy;
 import com.menstalk.partyservice.domain.Party;
-import com.menstalk.partyservice.dto.CountMember;
 import com.menstalk.partyservice.mapper.PartyMapper;
 import com.menstalk.partyservice.proxy.CountMemberProxy;
 import com.menstalk.partyservice.repository.PartyRepository;

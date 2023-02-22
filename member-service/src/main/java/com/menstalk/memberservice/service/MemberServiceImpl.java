@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import com.menstalk.memberservice.domain.Member;
 import com.menstalk.memberservice.dto.BillAddedRequest;
 import com.menstalk.memberservice.dto.BillDetailType;
-import com.menstalk.memberservice.dto.PartyResponse;
 import com.menstalk.memberservice.proxy.UpdateQtyProxy;
 import com.menstalk.memberservice.repository.MemberRepository;
 
@@ -40,13 +39,13 @@ public class MemberServiceImpl implements MemberService {
 		return Memberlist;
 	}
 
-	@Override
-	public List<PartyResponse> findPartysByUserId(Long userId) {
-
-		List<PartyResponse> PartyResponseList = new ArrayList<>();
-		PartyResponseList = memberRepository.findPartysByUserId(userId);
-		return PartyResponseList;
-	}
+//	@Override
+//	public List<PartyResponse> findPartysByUserId(Long userId) {
+//
+//		List<PartyResponse> PartyResponseList = new ArrayList<>();
+//		PartyResponseList = memberRepository.findPartysByUserId(userId);
+//		return PartyResponseList;
+//	}
 
 	@Override
 	public boolean addMembers(Member member) {

@@ -19,8 +19,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 	// + "FROM Party p INNER JOIN p.users u LEFT JOIN p.members m WHERE u.id =
 	// :userId GROUP BY p.id")
 	// 本机SQL查询
-	@Query(value = "SELECT * FROM party WHERE id = :id", nativeQuery = true)
-	List<PartyResponse> findPartysByUserId(@Param("userId") Long userId);
+//	@Query(value = "SELECT * FROM party WHERE id = :id", nativeQuery = true)
+//	List<PartyResponse> findPartysByUserId(@Param("userId") Long userId);
 
 	@Query("SELECT COUNT(m) FROM Member m WHERE m.partyId = :partyId")
 	Long countMember(@Param("partyId") Long partyId);
