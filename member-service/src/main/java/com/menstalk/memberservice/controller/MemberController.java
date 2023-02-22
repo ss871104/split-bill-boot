@@ -42,7 +42,7 @@ public class MemberController {
 	}
 	
 
-	@GetMapping("/findPartyByUserId")
+	@GetMapping("/findPartyIdByUserId")
 	// 指定這是一個 GET 請求，可以接收路徑參數
 	public ResponseEntity<List<PartyResponse>> findPartyByUserId(@RequestHeader(name = "id") String userId) {
 		List<PartyResponse> PartyResponseList = memberService.findPartysByUserId(Long.valueOf(userId));

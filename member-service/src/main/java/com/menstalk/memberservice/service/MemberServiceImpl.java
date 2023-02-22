@@ -13,21 +13,23 @@ import com.menstalk.memberservice.domain.Member;
 import com.menstalk.memberservice.dto.BillAddedRequest;
 import com.menstalk.memberservice.dto.BillDetailType;
 import com.menstalk.memberservice.dto.PartyResponse;
+import com.menstalk.memberservice.proxy.UpdateQtyProxy;
 import com.menstalk.memberservice.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 
-@Service //用於標注某個類是服務類，告訴Spring容器需要將該類實例化，並且可以被其他類所引用。
+@Service // 用於標注某個類是服務類，告訴Spring容器需要將該類實例化，並且可以被其他類所引用。
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
 	private final MemberRepository memberRepository;
-	
+	private final UpdateQtyProxy updateQtyProxy;
+
 	// private final MemberMapper memberMapper;
 
 	@Override
 	public Long countMember(Long partyId) {
-		
+
 		return memberRepository.countMember(partyId);
 	}
 
@@ -45,14 +47,14 @@ public class MemberServiceImpl implements MemberService {
 		PartyResponseList = memberRepository.findPartysByUserId(userId);
 		return PartyResponseList;
 	}
-	
+
 	@Override
 	public boolean addMembers(Member member) {
 		if (member.getMemberId() == null) {
 			memberRepository.save(member);
 //			memberService.countMember(newMember.getPartyId());
-			Long count = memberRepository.countMember(member.getPartyId());
-			if (partyProxy.updateQty(member.getPartyId(), count)) {
+			Long memberQty = memberRepository.countMember(member.getPartyId());
+			if (updateQtyProxy.updateQty(member.getPartyId(), memberQty)) {
 				return true;
 			}
 		}
@@ -184,6 +186,4 @@ public class MemberServiceImpl implements MemberService {
 		return true;
 	}
 
-	
-	
 }
