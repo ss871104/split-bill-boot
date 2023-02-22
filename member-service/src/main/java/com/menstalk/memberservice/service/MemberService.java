@@ -4,16 +4,14 @@ import java.util.List;
 
 import com.menstalk.memberservice.domain.Member;
 import com.menstalk.memberservice.dto.BillAddedRequest;
-import com.menstalk.memberservice.dto.PartyResponse;
+import com.menstalk.memberservice.dto.UserInPartys;
 
 public interface MemberService {
-
-	public Long countMember(Long partyId);
+	public List<UserInPartys> findUserInPartysByUserId(Long userId);
 	public List<Member> findMembersByPartyId(Long partyId);
-//	public List<PartyResponse> findPartysByUserId(Long userId);
 	public boolean addMembers(Member member);
 	public boolean updateMember(Member member);
-	public boolean deleteMember(Long memberId);
+	public boolean deleteMemberById(Long memberId);
 	public boolean updateBalanceAdd(List<BillAddedRequest> list);
 	public boolean updateBalanceDelete(List<BillAddedRequest> list);
 	

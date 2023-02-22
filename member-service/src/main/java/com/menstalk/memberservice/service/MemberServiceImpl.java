@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.menstalk.memberservice.domain.Member;
 import com.menstalk.memberservice.dto.BillAddedRequest;
 import com.menstalk.memberservice.dto.BillDetailType;
+import com.menstalk.memberservice.dto.UserInPartys;
 import com.menstalk.memberservice.proxy.UpdateQtyProxy;
 import com.menstalk.memberservice.repository.MemberRepository;
 
@@ -23,38 +24,30 @@ public class MemberServiceImpl implements MemberService {
 
 	private final MemberRepository memberRepository;
 	private final UpdateQtyProxy updateQtyProxy;
-
+	
 	// private final MemberMapper memberMapper;
 
 	@Override
-	public Long countMember(Long partyId) {
-
-		return memberRepository.countMember(partyId);
+	public List<UserInPartys> findUserInPartysByUserId(Long userId) {
+		List<UserInPartys> UserInPartysList = new ArrayList<>();
+		UserInPartysList = memberRepository.findUserInPartysByUserId(userId);
+		return UserInPartysList;
 	}
 
 	@Override
 	public List<Member> findMembersByPartyId(Long partyId) {
-		List<Member> Memberlist = new ArrayList<>();
-		Memberlist = memberRepository.findMemberIdsByPartyId(partyId);
-		return Memberlist;
+		List<Member> MemberList = new ArrayList<>();
+		MemberList = memberRepository.findMemberIdsByPartyId(partyId);
+		return MemberList;
 	}
-
-//	@Override
-//	public List<PartyResponse> findPartysByUserId(Long userId) {
-//
-//		List<PartyResponse> PartyResponseList = new ArrayList<>();
-//		PartyResponseList = memberRepository.findPartysByUserId(userId);
-//		return PartyResponseList;
-//	}
 
 	@Override
 	public boolean addMembers(Member member) {
 		if (member.getMemberId() == null) {
 			memberRepository.save(member);
-//			memberService.countMember(newMember.getPartyId());
 			Long memberQty = memberRepository.countMember(member.getPartyId());
 			updateQtyProxy.updateQty(member.getPartyId(), memberQty);
-				return true;
+			return true;
 		}
 		return false;
 
@@ -70,14 +63,16 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public boolean deleteMember(Long memberId) {
-		try {
+	public boolean deleteMemberById(Long memberId) {
+		Member member = new Member();
+		if (member.getMemberId() != null) {
 			memberRepository.deleteById(memberId);
+			Long memberQty = memberRepository.countMember(member.getPartyId());
+			updateQtyProxy.updateQty(member.getPartyId(), memberQty);
 			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
 		}
+		return false;
+
 	}
 
 	@Override
