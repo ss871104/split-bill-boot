@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.menstalk.memberservice.domain.Member;
 import com.menstalk.memberservice.dto.BillAddedRequest;
-import com.menstalk.memberservice.dto.UserInPartys;
 import com.menstalk.memberservice.service.MemberService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,12 +27,12 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 
 	private final MemberService memberService;
-	@GetMapping("/{userId}")
-	public List<UserInPartys> findUserInPartysByUserId(Long userId){
+	@GetMapping("/findUserInPartysByUserId/{userId}")
+	public List<Long> findUserInPartysByUserId(Long userId){
 		return memberService.findUserInPartysByUserId(userId);
 	}
 	
-	@GetMapping("/{partyId}")
+	@GetMapping("/findMembersByPartyId/{partyId}")
 	public List<Member> findMembersByPartyId(@PathVariable Long partyId) {
 		return memberService.findMembersByPartyId(partyId);
 	}

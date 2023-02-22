@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import com.menstalk.memberservice.domain.Member;
 import com.menstalk.memberservice.dto.BillAddedRequest;
 import com.menstalk.memberservice.dto.BillDetailType;
-import com.menstalk.memberservice.dto.UserInPartys;
 import com.menstalk.memberservice.proxy.UpdateQtyProxy;
 import com.menstalk.memberservice.repository.MemberRepository;
 
@@ -24,21 +23,19 @@ public class MemberServiceImpl implements MemberService {
 
 	private final MemberRepository memberRepository;
 	private final UpdateQtyProxy updateQtyProxy;
-	
-	// private final MemberMapper memberMapper;
 
 	@Override
-	public List<UserInPartys> findUserInPartysByUserId(Long userId) {
-		List<UserInPartys> UserInPartysList = new ArrayList<>();
-		UserInPartysList = memberRepository.findUserInPartysByUserId(userId);
-		return UserInPartysList;
+	public List<Long> findUserInPartysByUserId(Long userId) {
+
+		return memberRepository.findUserInPartysByUserId(userId);
+
 	}
 
 	@Override
 	public List<Member> findMembersByPartyId(Long partyId) {
-		List<Member> MemberList = new ArrayList<>();
-		MemberList = memberRepository.findMemberIdsByPartyId(partyId);
-		return MemberList;
+
+		return memberRepository.findMemberIdsByPartyId(partyId);
+
 	}
 
 	@Override
