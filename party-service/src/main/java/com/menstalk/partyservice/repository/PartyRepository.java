@@ -11,4 +11,5 @@ public interface PartyRepository extends JpaRepository<Party, Long> {  // 結尾
 //	@Query("UPDATE Party SET memberQuantity = :memberQuantity WHERE partyId = :partyId")
 //	boolean updateMemberQty(@Param("partyId") Long partyId, @Param("memberQuantity") Long memberQty);
 
+
 }
