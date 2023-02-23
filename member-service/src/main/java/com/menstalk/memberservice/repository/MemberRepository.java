@@ -9,8 +9,8 @@ import org.springframework.data.repository.query.Param;
 import com.menstalk.memberservice.domain.Member;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
-
-	List<Member> findMemberIdsByPartyId(Long partyId);
+	@Query("SELECT m FROM Member m WHERE m.party.id = :partyId")
+	List<Member> findMembersByPartyId(Long partyId);
 
 	@Query("SELECT DISTINCT m.partyId FROM Member m WHERE m.userId = :userId")
 	List<Long> findUserInPartysByUserId(Long partyId);
