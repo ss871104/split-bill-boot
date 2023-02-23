@@ -1,11 +1,15 @@
 package com.menstalk.partyservice.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
+import org.apache.tomcat.jni.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.menstalk.partyservice.domain.Party;
+import com.menstalk.partyservice.dto.Member;
+import com.menstalk.partyservice.dto.MemberStatus;
 import com.menstalk.partyservice.mapper.PartyMapper;
 import com.menstalk.partyservice.proxy.CountMemberProxy;
 import com.menstalk.partyservice.repository.PartyRepository;
@@ -28,10 +32,20 @@ public class PartyServiceimpl implements PartyService {
 	}
 
 	@Override
-	public boolean addParty(Party party) {
+	public boolean addParty(Party party, Long userId) {
 		if (party.getPartyId() == null) {
 			party.setMemberQuantity(1L);
-			partyRepository.save(party);
+			party = partyRepository.save(party);
+			partyRepository.flush();
+			Long partyId = party.getPartyId();
+			Member member = Member.builder()
+					.userId(userId)
+					.partyId(partyId)
+					.createTime(LocalDateTime.now())
+					.memberStatus(MemberStatus.JOINED)
+					.build();
+			
+			countMemberProxy.addMembers(member);
 			return true;
 		}
 		return false;
@@ -77,6 +91,29 @@ public class PartyServiceimpl implements PartyService {
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	@Override
+	public List<Party> findPartyByUserId(Long userId) {
+		
+		List<Long> partyIds = memberProxy.(userId);
+		
+		return partyRepository.findAllById(partyIds);
+		
+//		Long userId = u.findPartyByUserId();
+//		User user = User.builder()
+//				.userId(userId)
+//				.partyId(partyId)
+//				.createTime(LocalDateTime.now())
+//				.memberStatus(MemberStatus.JOINED)
+//				.build();
+//		
+//		countMemberProxy.addMembers(member);
+//		try {
+//			User user = new User();
+//			user = partyRepository.findByUserId()
+//		}
+//		return false;
 	}
 }
 	
