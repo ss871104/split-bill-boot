@@ -5,6 +5,7 @@ import com.menstalk.userservice.authentication.dto.RegisterRequest;
 import com.menstalk.userservice.authentication.dto.TokenResponse;
 import com.menstalk.userservice.authentication.handler.UsernameDuplicateException;
 import com.menstalk.userservice.authentication.jwt.JwtUtil;
+import com.menstalk.userservice.event.NewUserEvent;
 import com.menstalk.userservice.authentication.dto.UserAuthResponse;
 import com.menstalk.userservice.user.domain.User;
 import com.menstalk.userservice.user.mapper.UserConvert;
@@ -13,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,6 +33,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserConvert userConvert;
     private final JwtUtil jwtUtil;
     private final RedisTemplate<String, String> redisTemplate;
+    private final KafkaTemplate<String, NewUserEvent> kafkaTemplate;
     @Override
     public TokenResponse register(RegisterRequest registerRequest) {
         User user = User.builder()
@@ -41,8 +44,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .build();
 
         try {
-            userRepository.save(user);
+        	user = userRepository.save(user);
+        	userRepository.flush();
             String jwtToken = jwtUtil.generateToken(userConvert.userConvertToAuthResponse(user));
+            
+            kafkaTemplate.send("newUserTopic", new NewUserEvent(user.getUserId(), user.getName()));
 
             redisTemplate.opsForValue().set("jwt:" + registerRequest.getUsername(), jwtToken, 3, TimeUnit.HOURS);
 
