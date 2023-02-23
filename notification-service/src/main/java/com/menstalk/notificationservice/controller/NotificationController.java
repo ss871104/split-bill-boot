@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.menstalk.notificationservice.domain.NotificationVo;
+import com.menstalk.notificationservice.domain.Notification;
 import com.menstalk.notificationservice.service.NotificationService;
 
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class NotificationController {
 
 	@GetMapping("/findAll")
 	public ResponseEntity<List<NotificationResponse>> findAllNotification() {
-		List<NotificationVo> list = notificationService.notificationVo();
+		List<Notification> list = notificationService.notificationVo();
 		List<NotificationResponse> reponseList = list.stream()
 				.map(x -> NotificationResponse.builder().notificationId(x.getNotificationId()).userId(x.getUserId())
 						.status(x.getStatus()).createTime(x.getCreateTime()).title(x.getTitle()).content(x.getContent())

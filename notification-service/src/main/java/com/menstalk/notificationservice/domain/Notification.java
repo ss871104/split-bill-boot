@@ -21,7 +21,7 @@ import lombok.*;
 @NoArgsConstructor // 無參數建構子
 @Entity // 對應資料庫類別
 @Table(name = "notification")
-public class NotificationVo {
+public class Notification {
 	@Id // 讓資料庫對應的ID
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long notificationId;
