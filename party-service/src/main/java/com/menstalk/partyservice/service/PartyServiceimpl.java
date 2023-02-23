@@ -8,7 +8,6 @@ import org.apache.tomcat.jni.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.menstalk.billservice.proxy.MemberProxy;
 import com.menstalk.partyservice.domain.Party;
 import com.menstalk.partyservice.dto.Member;
 import com.menstalk.partyservice.dto.MemberStatus;
@@ -40,13 +39,9 @@ public class PartyServiceimpl implements PartyService {
 			party = partyRepository.save(party);
 			partyRepository.flush();
 			Long partyId = party.getPartyId();
-			Member member = Member.builder()
-					.userId(userId)
-					.partyId(partyId)
-					.createTime(LocalDateTime.now())
-					.memberStatus(MemberStatus.JOINED)
-					.build();
-			
+			Member member = Member.builder().userId(userId).partyId(partyId).createTime(LocalDateTime.now())
+					.memberStatus(MemberStatus.JOINED).build();
+
 			countMemberProxy.addMembers(member);
 			return true;
 		}
@@ -80,14 +75,14 @@ public class PartyServiceimpl implements PartyService {
 
 	@Override
 	public boolean updateMemberQty(Long partyId, Long memberQty) {
-		
+
 		try {
 			Party party = new Party();
 			party = partyRepository.findById(partyId).orElseThrow();
 			party.setMemberQuantity(memberQty);
 			partyRepository.save(party);
 //			partyRepository.updateMemberQty(partyId, memberQty);
-			
+
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -97,9 +92,18 @@ public class PartyServiceimpl implements PartyService {
 
 	@Override
 	public List<Party> findPartysByPartyIds(Long userId) {
-		List<Long> partyList = new ArrayList<Long>();
-		partyList = CountMemberProxy.findUserInPartysByUserId(userId);
-		return partyRepository.findAllById(partyList);
+		List<Long> partyIdList = CountMemberProxy.findUserInPartysByUserId(userId);
+		List<Party> partyList =  partyRepository.findAllById(partyIdList);
+//		List<Party> partyList = new ArrayList<>();
+//		for (int i = 0; i < partyIdList.size(); i++) {
+//			Long partyId = partyIdList.get(i);
+//		Party party = partyRepository.findById(partyId).orElseThrow(); // 這裡是把partyid丟到Partyrespository的.findById()方法 去找出PARTY的所有資料再放到PARTY類別 裡面。
+//			if (party != null) {
+//				partyList.add(party);
+//			}
+//		}
+		return partyList;
+
 	}
 
 //	@Override
@@ -131,4 +135,3 @@ public class PartyServiceimpl implements PartyService {
 ////		return false;
 //	}
 }
-	
