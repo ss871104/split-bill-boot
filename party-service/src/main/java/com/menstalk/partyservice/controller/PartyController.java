@@ -71,13 +71,11 @@ public class PartyController {
 		}
 	}
 
-	@GetMapping("/finduserId")
-	public boolean findPartyByUserId(@RequestHeader(name = "id") Long userId) {
-		if (partyService.findPartyByUserId(userId)) {
-			return true;
-		} else {
-			return false;
-		}
+	@GetMapping("/findPartysByPartyIds")
+	public List<Party> findPartyByUserId(@RequestHeader(name = "id") Long userId) {
+		
+			return partyService.findPartysByPartyIds(userId);
 
+		}
 	}
-}
+

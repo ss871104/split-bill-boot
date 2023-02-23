@@ -1,12 +1,14 @@
 package com.menstalk.partyservice.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.tomcat.jni.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.menstalk.billservice.proxy.MemberProxy;
 import com.menstalk.partyservice.domain.Party;
 import com.menstalk.partyservice.dto.Member;
 import com.menstalk.partyservice.dto.MemberStatus;
@@ -94,26 +96,39 @@ public class PartyServiceimpl implements PartyService {
 	}
 
 	@Override
-	public List<Party> findPartyByUserId(Long userId) {
-		
-		List<Long> partyIds = memberProxy.(userId);
-		
-		return partyRepository.findAllById(partyIds);
-		
-//		Long userId = u.findPartyByUserId();
-//		User user = User.builder()
-//				.userId(userId)
-//				.partyId(partyId)
-//				.createTime(LocalDateTime.now())
-//				.memberStatus(MemberStatus.JOINED)
-//				.build();
-//		
-//		countMemberProxy.addMembers(member);
-//		try {
-//			User user = new User();
-//			user = partyRepository.findByUserId()
-//		}
-//		return false;
+	public List<Party> findPartysByPartyIds(Long userId) {
+		List<Long> partyList = new ArrayList<Long>();
+		partyList = CountMemberProxy.findUserInPartysByUserId(userId);
+		return partyRepository.findAllById(partyList);
 	}
+
+//	@Override
+//	public List<Long> findUserInPartysByUserId(Long userId) {
+//		
+//		List<Long> partyIds;
+//		try {
+//			partyIds = CountMemberProxy.findUserInPartysByUserId(userId);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		return (List<Long>) partyRepository.findById(userId).orElseThrow();
+//		
+////		Long userId = u.findPartyByUserId();
+////		User user = User.builder()
+////				.userId(userId)
+////				.partyId(partyId)
+////				.createTime(LocalDateTime.now())
+////				.memberStatus(MemberStatus.JOINED)
+////				.build();
+////		
+////		countMemberProxy.addMembers(member);
+////		try {
+////			User user = new User();
+////			user = partyRepository.findByUserId()
+////		}
+////		return false;
+//	}
 }
 	

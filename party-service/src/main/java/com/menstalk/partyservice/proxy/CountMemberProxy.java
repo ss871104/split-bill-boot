@@ -1,5 +1,7 @@
 package com.menstalk.partyservice.proxy;
 
+import java.util.List;
+
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,9 @@ public interface CountMemberProxy {
 	@PostMapping("/api/member/add")
 	public ResponseEntity<String> addMembers(@RequestBody Member member);
 	
-//    @GetMapping("/api/member/finduserId/{userId}")
-//    public ResponseEntity<String> find(@PathVariable("userId") @RequestBody Long  partyId);
+   @GetMapping("/api/member/findUserInPartysByUserId/{userId}")
+    public static List<Long>findUserInPartysByUserId(@PathVariable Long userId) {
+	// TODO Auto-generated method stub
+	return null;
+}
 }

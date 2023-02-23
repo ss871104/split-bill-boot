@@ -15,6 +15,6 @@ public interface PartyService {
 
 	public boolean updateMemberQty(Long partyId, Long memberQty);
 
-	public List<Party> findPartyByUserId(Long userId);
+	public List<Party> findPartysByPartyIds(Long userId);
 
 }
