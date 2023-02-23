@@ -28,7 +28,7 @@ public class MemberController {
 
 	private final MemberService memberService;
 	@GetMapping("/findUserInPartysByUserId/{userId}")
-	public List<Long> findUserInPartysByUserId(Long userId){
+	public List<Long> findUserInPartysByUserId(@PathVariable Long userId){
 		return memberService.findUserInPartysByUserId(userId);
 	}
 	

@@ -34,7 +34,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public List<Member> findMembersByPartyId(Long partyId) {
 
-		return memberRepository.findMemberIdsByPartyId(partyId);
+		return memberRepository.findMembersByPartyId(partyId);
 
 	}
 
