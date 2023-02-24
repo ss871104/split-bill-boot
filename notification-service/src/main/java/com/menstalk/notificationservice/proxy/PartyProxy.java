@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface PartyProxy {
 	
 	@GetMapping("/findPartyNameByPartyId/{partyId}")
-	public String findPartyNameByPartyId(@PathVariable Long partyId);
+	public String findPartyNameByPartyId(@PathVariable("partyId") Long partyId);
 
 }
