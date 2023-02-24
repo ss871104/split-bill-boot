@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class PartyServiceimpl implements PartyService {
 
 	private final PartyRepository partyRepository;
-	private final MemberProxy countMemberProxy;
+	private final MemberProxy memberProxy;
 	private final PartyMapper partyMapper;
 
 	@Override
@@ -42,7 +42,7 @@ public class PartyServiceimpl implements PartyService {
 			Member member = Member.builder().userId(userId).partyId(partyId).createTime(LocalDateTime.now())
 					.memberStatus(MemberStatus.JOINED).build();
 
-			countMemberProxy.addMemberByCreateParty(member);
+			memberProxy.addMemberByCreateParty(member);
 			return true;
 		}
 		return false;
@@ -52,6 +52,7 @@ public class PartyServiceimpl implements PartyService {
 	public boolean deleteParty(Long partyId) {
 		try {
 			partyRepository.deleteById(partyId);
+			memberProxy.deleteAllByPartyId(partyId);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -92,7 +93,7 @@ public class PartyServiceimpl implements PartyService {
 
 	@Override
 	public List<Party> findPartysByPartyIds(Long userId) {
-		List<Long> partyIdList = MemberProxy.findUserInPartysByUserId(userId);
+		List<Long> partyIdList = memberProxy.findUserInPartysByUserId(userId);
 		List<Party> partyList = partyRepository.findAllById(partyIdList);
 //		List<Party> partyList = new ArrayList<>();
 //		for (int i = 0; i < partyIdList.size(); i++) {

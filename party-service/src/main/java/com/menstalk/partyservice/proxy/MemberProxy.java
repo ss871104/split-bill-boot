@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,9 +23,10 @@ public interface MemberProxy {
 	public ResponseEntity<String> addMemberByCreateParty(@RequestBody Member member);
 	
    @GetMapping("/api/member/findUserInPartysByUserId/{userId}")
-    public static List<Long>findUserInPartysByUserId(@PathVariable Long userId) {
-	// TODO Auto-generated method stub
-	return null;
+    public  List<Long>findUserInPartysByUserId(@PathVariable Long userId) ;
+
 	
+	@DeleteMapping ("/api/member/deleteMemberByPartyId/{partyId}")
+	public  ResponseEntity<String> deleteAllByPartyId(@PathVariable Long partyId);
 }
-}
+
