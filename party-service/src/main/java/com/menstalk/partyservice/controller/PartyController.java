@@ -77,5 +77,12 @@ public class PartyController {
 			return partyService.findPartysByPartyIds(userId);
 
 		}
+	
+
+	@GetMapping("/findPartyNameByPartyId/{partyId}")
+	public String findPartyNameByPartyId(@PathVariable Long partyId) {
+		
+			return partyService.findPartyNameByPartyId(partyId);
+		}
 	}
 

@@ -1,6 +1,5 @@
-package com.menstalk.memberservice.service;
+package com.menstalk.memberservice.service; 
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +11,7 @@ import org.springframework.stereotype.Service;
 import com.menstalk.memberservice.domain.Member;
 import com.menstalk.memberservice.dto.BillAddedRequest;
 import com.menstalk.memberservice.dto.BillDetailType;
-import com.menstalk.memberservice.proxy.UpdateQtyProxy;
+import com.menstalk.memberservice.proxy.PartyProxy;
 import com.menstalk.memberservice.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -22,7 +21,13 @@ import lombok.RequiredArgsConstructor;
 public class MemberServiceImpl implements MemberService {
 
 	private final MemberRepository memberRepository;
-	private final UpdateQtyProxy updateQtyProxy;
+	private final PartyProxy updateQtyProxy;
+	
+	@Override
+	public List<Long> findUserIdByMemberId(Long memberId) {
+		return memberRepository.findUserIdByMemberId(memberId);
+	}
+	
 
 	@Override
 	public List<Long> findUserInPartysByUserId(Long userId) {
@@ -34,10 +39,20 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public List<Member> findMembersByPartyId(Long partyId) {
 
-		return memberRepository.findMembersByPartyId(partyId);
+		return memberRepository.findAllByPartyId(partyId);
 
 	}
 
+	
+	@Override
+	public boolean addMemberByCreateParty(Member member) {
+		if (member.getMemberId() == null) {
+			memberRepository.save(member);
+			return true;
+		}
+		return false;
+	}
+	
 	@Override
 	public boolean addMembers(Member member) {
 		if (member.getMemberId() == null) {
@@ -59,6 +74,16 @@ public class MemberServiceImpl implements MemberService {
 		return false;
 	}
 
+	
+	@Override
+	public boolean deleteMemberByPartyId(Long partyId) {
+		if(memberRepository.deleteAllByPartyId(partyId)) {
+			return true;
+			
+		}
+		return false;
+	}
+	
 	@Override
 	public boolean deleteMemberById(Long memberId) {
 		Member member = new Member();
@@ -67,6 +92,7 @@ public class MemberServiceImpl implements MemberService {
 			Long memberQty = memberRepository.countMember(member.getPartyId());
 			updateQtyProxy.updateQty(member.getPartyId(), memberQty);
 			return true;
+			
 		}
 		return false;
 
