@@ -78,7 +78,8 @@ public class MemberController {
 	public ResponseEntity<String> deleteAllByPartyId(@PathVariable Long partyId) {
 		if (memberService.deleteMemberByPartyId(partyId)) {
 			return new ResponseEntity<String>("刪除成功", HttpStatus.ACCEPTED);
-		} else {
+		}
+		else {
 			return new ResponseEntity<String>("刪除失敗", HttpStatus.NOT_ACCEPTABLE);
 		}
 	}

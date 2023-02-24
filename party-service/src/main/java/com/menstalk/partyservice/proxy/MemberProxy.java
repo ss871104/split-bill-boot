@@ -23,10 +23,10 @@ public interface MemberProxy {
 	public ResponseEntity<String> addMemberByCreateParty(@RequestBody Member member);
 	
    @GetMapping("/api/member/findUserInPartysByUserId/{userId}")
-    public  List<Long>findUserInPartysByUserId(@PathVariable Long userId) ;
+    public  List<Long>findUserInPartysByUserId(@PathVariable("userId") Long userId) ;
 
 	
 	@DeleteMapping ("/api/member/deleteMemberByPartyId/{partyId}")
-	public  ResponseEntity<String> deleteAllByPartyId(@PathVariable Long partyId);
+	public  ResponseEntity<String> deleteAllByPartyId(@PathVariable("partyId") Long partyId);
 }
 

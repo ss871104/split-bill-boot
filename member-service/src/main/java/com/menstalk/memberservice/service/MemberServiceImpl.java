@@ -77,11 +77,15 @@ public class MemberServiceImpl implements MemberService {
 	
 	@Override
 	public boolean deleteMemberByPartyId(Long partyId) {
-		if(memberRepository.deleteAllByPartyId(partyId)) {
+		try {
+			
+			memberRepository.deleteAllByPartyId(partyId);
 			return true;
 			
+		} catch (Exception e) {
+			return false;
 		}
-		return false;
+		
 	}
 	
 	@Override

@@ -47,12 +47,14 @@ public class PartyServiceimpl implements PartyService {
 		}
 		return false;
 	}
-
+	
 	@Override
 	public boolean deleteParty(Long partyId) {
 		try {
+			
 			partyRepository.deleteById(partyId);
 			memberProxy.deleteAllByPartyId(partyId);
+			
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

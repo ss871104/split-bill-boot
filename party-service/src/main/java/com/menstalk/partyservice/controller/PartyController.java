@@ -51,9 +51,9 @@ public class PartyController {
 		}
 	}
 
-	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<String> deleteParty(@PathVariable Long id) {
-		if (partyService.deleteParty(id)) {
+	@DeleteMapping("/delete/{partyId}")
+	public ResponseEntity<String> deleteParty(@PathVariable Long partyId) {
+		if (partyService.deleteParty(partyId)) {
 			return new ResponseEntity<String>("刪除成功", HttpStatus.ACCEPTED);
 		} else {
 			return new ResponseEntity<String>("刪除失敗", HttpStatus.NOT_ACCEPTABLE);
