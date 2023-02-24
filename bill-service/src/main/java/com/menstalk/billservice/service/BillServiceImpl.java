@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.context.annotation.Primary;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import com.menstalk.billservice.domain.BillDetail;
 import com.menstalk.billservice.domain.BillDetailType;
 import com.menstalk.billservice.dto.BillAddedRequest;
 import com.menstalk.billservice.dto.BillPlacedRequest;
+import com.menstalk.billservice.event.NewBillEvent;
 import com.menstalk.billservice.mapper.BillMapper;
 import com.menstalk.billservice.proxy.MemberProxy;
 import com.menstalk.billservice.repository.BillDetailRepository;
@@ -32,6 +34,7 @@ public class BillServiceImpl implements BillService {
 	private final BillDetailService billDetailService;
 	private final BillMapper billMapper;
 	private final MemberProxy memberProxy;
+	private final KafkaTemplate<String, NewBillEvent> kafkaTemplate;
 	
 	private final OtherBillServices otherBillServices;
 
@@ -87,6 +90,9 @@ public class BillServiceImpl implements BillService {
 					.collect(Collectors.toList());
 			// 利用OpenFeign抓updateBalance的API
 			memberProxy.updateBalanceByAdd(billAddedRequest);
+			
+			// 利用Kafka發送訊息
+			kafkaTemplate.send("newBillTopic", new NewBillEvent(bill.getPartyId()));
 
 			return true;
 
@@ -178,6 +184,9 @@ public class BillServiceImpl implements BillService {
 					.collect(Collectors.toList());
 			// 利用OpenFeign抓updateBalance的API
 			memberProxy.updateBalanceByAdd(billAddedRequest);
+			
+			// 利用Kafka發送訊息
+			kafkaTemplate.send("newBillTopic", new NewBillEvent(bill.getPartyId()));
 
 			return true;
 
@@ -232,6 +241,9 @@ public class BillServiceImpl implements BillService {
 					.collect(Collectors.toList());
 			// 利用OpenFeign抓updateBalance的API
 			memberProxy.updateBalanceByAdd(billAddedRequest);
+			
+			// 利用Kafka發送訊息
+			kafkaTemplate.send("newBillTopic", new NewBillEvent(bill.getPartyId()));
 
 			return true;
 

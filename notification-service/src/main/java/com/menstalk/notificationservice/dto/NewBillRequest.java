@@ -1,4 +1,4 @@
-package com.menstalk.billservice.event;
+package com.menstalk.notificationservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class NewBillEvent {
-	
+public class NewBillRequest {
+	private Long notificationId;
 	private Long partyId;
 
 }
