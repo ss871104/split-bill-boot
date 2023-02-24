@@ -16,5 +16,6 @@ public interface PartyService {
 	public boolean updateMemberQty(Long partyId, Long memberQty);
 
 	public List<Party> findPartysByPartyIds(Long userId); // public(修飾字)後面是要傳送的值的資料型態 
-
+	 
+	public String findPartyNameByPartyId(Long partyId);
 }

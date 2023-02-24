@@ -27,6 +27,12 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 
 	private final MemberService memberService;
+	
+	@GetMapping("/findUserIdByMemberId/{memberId}")
+	public List<Long> findUserIdByMemberId(@PathVariable Long memberId) {
+		return memberService.findUserIdByMemberId(memberId);
+	}
+	
 	@GetMapping("/findUserInPartysByUserId/{userId}")
 	public List<Long> findUserInPartysByUserId(@PathVariable Long userId){
 		return memberService.findUserInPartysByUserId(userId);
@@ -37,7 +43,17 @@ public class MemberController {
 		return memberService.findMembersByPartyId(partyId);
 	}
 	
-	@PostMapping("/add")
+	@PostMapping("/addMemberByCreateParty")
+	public ResponseEntity<String> addMemberByCreateParty(@RequestBody Member member) {
+
+		if (memberService.addMemberByCreateParty(member)) {
+			return new ResponseEntity<String>("新增成功", HttpStatus.ACCEPTED);
+		} else {
+			return new ResponseEntity<String>("新增失敗", HttpStatus.NOT_ACCEPTABLE);
+		}
+	}
+
+	@PostMapping("/addMembers")
 	public ResponseEntity<String> addMembers(@RequestBody Member member) {
 
 		if (memberService.addMembers(member)) {
@@ -47,7 +63,7 @@ public class MemberController {
 		}
 	}
 
-	@PutMapping("/update")
+	@PutMapping("/updateMember")
 	public ResponseEntity<String> updateMember(@RequestBody Member member) {
 
 		if (memberService.updateMember(member)) {
@@ -57,8 +73,8 @@ public class MemberController {
 		}
 	}
 
-	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<String> deleteMember(@PathVariable Long memberId) {
+	@DeleteMapping("/deleteMemberById/{id}")
+	public ResponseEntity<String> deleteMemberById(@PathVariable Long memberId) {
 		if (memberService.deleteMemberById(memberId)) {
 			return new ResponseEntity<String>("刪除成功", HttpStatus.ACCEPTED);
 		} else {
