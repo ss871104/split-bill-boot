@@ -12,7 +12,7 @@ import com.menstalk.partyservice.domain.Party;
 import com.menstalk.partyservice.dto.Member;
 import com.menstalk.partyservice.dto.MemberStatus;
 import com.menstalk.partyservice.mapper.PartyMapper;
-import com.menstalk.partyservice.proxy.CountMemberProxy;
+import com.menstalk.partyservice.proxy.MemberProxy;
 import com.menstalk.partyservice.repository.PartyRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ import lombok.RequiredArgsConstructor;
 public class PartyServiceimpl implements PartyService {
 
 	private final PartyRepository partyRepository;
-	private final CountMemberProxy countMemberProxy;
+	private final MemberProxy countMemberProxy;
 	private final PartyMapper partyMapper;
 
 	@Override
@@ -42,7 +42,7 @@ public class PartyServiceimpl implements PartyService {
 			Member member = Member.builder().userId(userId).partyId(partyId).createTime(LocalDateTime.now())
 					.memberStatus(MemberStatus.JOINED).build();
 
-			countMemberProxy.addMembers(member);
+			countMemberProxy.addMemberByCreateParty(member);
 			return true;
 		}
 		return false;
@@ -92,8 +92,8 @@ public class PartyServiceimpl implements PartyService {
 
 	@Override
 	public List<Party> findPartysByPartyIds(Long userId) {
-		List<Long> partyIdList = CountMemberProxy.findUserInPartysByUserId(userId);
-		List<Party> partyList =  partyRepository.findAllById(partyIdList);
+		List<Long> partyIdList = MemberProxy.findUserInPartysByUserId(userId);
+		List<Party> partyList = partyRepository.findAllById(partyIdList);
 //		List<Party> partyList = new ArrayList<>();
 //		for (int i = 0; i < partyIdList.size(); i++) {
 //			Long partyId = partyIdList.get(i);
@@ -106,32 +106,8 @@ public class PartyServiceimpl implements PartyService {
 
 	}
 
-//	@Override
-//	public List<Long> findUserInPartysByUserId(Long userId) {
-//		
-//		List<Long> partyIds;
-//		try {
-//			partyIds = CountMemberProxy.findUserInPartysByUserId(userId);
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//		return (List<Long>) partyRepository.findById(userId).orElseThrow();
-//		
-////		Long userId = u.findPartyByUserId();
-////		User user = User.builder()
-////				.userId(userId)
-////				.partyId(partyId)
-////				.createTime(LocalDateTime.now())
-////				.memberStatus(MemberStatus.JOINED)
-////				.build();
-////		
-////		countMemberProxy.addMembers(member);
-////		try {
-////			User user = new User();
-////			user = partyRepository.findByUserId()
-////		}
-////		return false;
-//	}
+	@Override
+	public String findPartyNameByPartyId(Long partyId) {
+		return partyRepository.findPartyNameByPartyId(partyId);
+	}
 }

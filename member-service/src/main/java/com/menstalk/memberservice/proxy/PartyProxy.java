@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient("party-service")
-public interface UpdateQtyProxy {
+public interface PartyProxy {
 
 	@PutMapping("/api/party/updateQty/{partyId}")
 	public void updateQty(@PathVariable("partyId") Long partyId,

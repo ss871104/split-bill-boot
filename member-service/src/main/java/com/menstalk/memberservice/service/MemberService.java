@@ -7,10 +7,13 @@ import com.menstalk.memberservice.dto.BillAddedRequest;
 
 
 public interface MemberService {
+	public List<Long> findUserIdByMemberId(Long memberId);
 	public List<Long> findUserInPartysByUserId(Long userId);
 	public List<Member> findMembersByPartyId(Long partyId);
+	public boolean addMemberByCreateParty(Member member);
 	public boolean addMembers(Member member);
 	public boolean updateMember(Member member);
+	public boolean deleteMemberByPartyId(Long partyId);
 	public boolean deleteMemberById(Long memberId);
 	public boolean updateBalanceAdd(List<BillAddedRequest> list);
 	public boolean updateBalanceDelete(List<BillAddedRequest> list);

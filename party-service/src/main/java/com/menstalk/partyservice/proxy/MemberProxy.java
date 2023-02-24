@@ -13,17 +13,18 @@ import com.menstalk.partyservice.dto.Member;
 
 
 @FeignClient("member-service")
-public interface CountMemberProxy {
+public interface MemberProxy {
 	
 	@GetMapping("/api/member/countMember/{partyId}")
 	public Long countMember(@PathVariable("partyId") Long partyId);
 	
-	@PostMapping("/api/member/add")
-	public ResponseEntity<String> addMembers(@RequestBody Member member);
+	@PostMapping("/api/member/addMemberByCreateParty")
+	public ResponseEntity<String> addMemberByCreateParty(@RequestBody Member member);
 	
    @GetMapping("/api/member/findUserInPartysByUserId/{userId}")
     public static List<Long>findUserInPartysByUserId(@PathVariable Long userId) {
 	// TODO Auto-generated method stub
 	return null;
+	
 }
 }
