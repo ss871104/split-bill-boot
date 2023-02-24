@@ -91,7 +91,7 @@ public class BillServiceImpl implements BillService {
 			// 利用OpenFeign抓updateBalance的API
 			memberProxy.updateBalanceByAdd(billAddedRequest);
 			
-			// 利用Kafka發送訊息
+			// 利用KafkaTemplate傳送Consumer需要的參數
 			kafkaTemplate.send("newBillTopic", new NewBillEvent(bill.getPartyId()));
 
 			return true;
@@ -185,7 +185,7 @@ public class BillServiceImpl implements BillService {
 			// 利用OpenFeign抓updateBalance的API
 			memberProxy.updateBalanceByAdd(billAddedRequest);
 			
-			// 利用Kafka發送訊息
+			// 利用KafkaTemplate傳送Consumer需要的參數
 			kafkaTemplate.send("newBillTopic", new NewBillEvent(bill.getPartyId()));
 
 			return true;
@@ -242,7 +242,7 @@ public class BillServiceImpl implements BillService {
 			// 利用OpenFeign抓updateBalance的API
 			memberProxy.updateBalanceByAdd(billAddedRequest);
 			
-			// 利用Kafka發送訊息
+			// 利用KafkaTemplate傳送Consumer需要的參數
 			kafkaTemplate.send("newBillTopic", new NewBillEvent(bill.getPartyId()));
 
 			return true;
