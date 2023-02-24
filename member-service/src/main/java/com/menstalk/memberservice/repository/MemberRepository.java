@@ -12,9 +12,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 	@Query("SELECT m FROM Member m WHERE m.partyId = :partyId")
 	List<Member> findMembersByPartyId(Long partyId);
 
-	
-	List<Long> findUserIdByMemberId(Long memberId);
-	
+	List<Long> findUserIdByPartyId(Long partyId);
+
 	List<Member> findAllByPartyId(Long partyId);
 
 	@Query("SELECT DISTINCT m.partyId FROM Member m WHERE m.userId = :userId")
@@ -22,7 +21,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
 	@Query("SELECT COUNT(m) FROM Member m WHERE m.partyId = :partyId")
 	Long countMember(@Param("partyId") Long partyId);
-	
+
 	boolean deleteAllByPartyId(Long partyId);
 
 }

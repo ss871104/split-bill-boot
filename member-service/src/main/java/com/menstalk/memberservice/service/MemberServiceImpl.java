@@ -24,8 +24,8 @@ public class MemberServiceImpl implements MemberService {
 	private final PartyProxy updateQtyProxy;
 	
 	@Override
-	public List<Long> findUserIdByMemberId(Long memberId) {
-		return memberRepository.findUserIdByMemberId(memberId);
+	public List<Long> findUserIdByPartyId(Long partyId) {
+		return memberRepository.findUserIdByPartyId(partyId);
 	}
 	
 

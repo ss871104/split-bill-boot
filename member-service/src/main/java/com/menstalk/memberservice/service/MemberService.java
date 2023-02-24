@@ -7,7 +7,7 @@ import com.menstalk.memberservice.dto.BillAddedRequest;
 
 
 public interface MemberService {
-	public List<Long> findUserIdByMemberId(Long memberId);
+	public List<Long> findUserIdByPartyId(Long PartyId);
 	public List<Long> findUserInPartysByUserId(Long userId);
 	public List<Member> findMembersByPartyId(Long partyId);
 	public boolean addMemberByCreateParty(Member member);

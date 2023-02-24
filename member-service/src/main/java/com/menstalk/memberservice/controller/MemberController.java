@@ -28,9 +28,9 @@ public class MemberController {
 
 	private final MemberService memberService;
 	
-	@GetMapping("/findUserIdByMemberId/{memberId}")
-	public List<Long> findUserIdByMemberId(@PathVariable Long memberId) {
-		return memberService.findUserIdByMemberId(memberId);
+	@GetMapping("/findUserIdByPartyId/{partyId}")
+	public List<Long> findUserIdBypartyId(@PathVariable Long partyId) {
+		return memberService.findUserIdByPartyId(partyId);
 	}
 	
 	@GetMapping("/findUserInPartysByUserId/{userId}")
@@ -72,7 +72,16 @@ public class MemberController {
 			return new ResponseEntity<String>("修改失敗", HttpStatus.NOT_ACCEPTABLE);
 		}
 	}
-
+	
+	
+	@DeleteMapping("/deleteMemberByPartyId/{partyId}")
+	public ResponseEntity<String> deleteAllByPartyId(@PathVariable Long partyId) {
+		if (memberService.deleteMemberByPartyId(partyId)) {
+			return new ResponseEntity<String>("刪除成功", HttpStatus.ACCEPTED);
+		} else {
+			return new ResponseEntity<String>("刪除失敗", HttpStatus.NOT_ACCEPTABLE);
+		}
+	}
 	@DeleteMapping("/deleteMemberById/{id}")
 	public ResponseEntity<String> deleteMemberById(@PathVariable Long memberId) {
 		if (memberService.deleteMemberById(memberId)) {
