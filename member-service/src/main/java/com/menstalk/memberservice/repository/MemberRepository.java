@@ -17,11 +17,12 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 	List<Member> findAllByPartyId(Long partyId);
 
 	@Query("SELECT DISTINCT m.partyId FROM Member m WHERE m.userId = :userId")
-	List<Long> findUserInPartysByUserId(@Param("partyId") Long partyId);
+	List<Long> findUserInPartysByUserId(@Param("userId")  Long userId);
 
 	@Query("SELECT COUNT(m) FROM Member m WHERE m.partyId = :partyId")
 	Long countMember(@Param("partyId") Long partyId);
-
-	boolean deleteAllByPartyId(Long partyId);
+	
+	@Query("DELETE FROM Member m WHERE m.partyId = :partyId")
+	void deleteAllByPartyId(@Param("partyId") Long partyId);
 
 }
