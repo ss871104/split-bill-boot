@@ -10,6 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface MemberProxy {
 	
 	@GetMapping("/findUserIdByPartyId/{partyId}")
-	public List<Long> findUserIdBypartyId(@PathVariable Long partyId);
+	public List<Long> findUserIdBypartyId(@PathVariable("partyId") Long partyId);
 
 }
