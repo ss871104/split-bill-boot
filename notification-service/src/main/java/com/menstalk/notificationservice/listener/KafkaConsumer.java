@@ -1,9 +1,6 @@
 package com.menstalk.notificationservice.listener;
 
-import static org.springframework.test.web.client.match.MockRestRequestMatchers.xpath;
-
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
