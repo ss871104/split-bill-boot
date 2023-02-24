@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.menstalk.memberservice.domain.Member;
 import com.menstalk.memberservice.dto.BillAddedRequest;
@@ -18,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service // 用於標注某個類是服務類，告訴Spring容器需要將該類實例化，並且可以被其他類所引用。
 @RequiredArgsConstructor
+@Transactional
 public class MemberServiceImpl implements MemberService {
 
 	private final MemberRepository memberRepository;
@@ -78,11 +80,11 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public boolean deleteMemberByPartyId(Long partyId) {
 		try {
-			
 			memberRepository.deleteAllByPartyId(partyId);
 			return true;
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 		

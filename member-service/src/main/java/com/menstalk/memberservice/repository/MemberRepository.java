@@ -22,7 +22,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 	@Query("SELECT COUNT(m) FROM Member m WHERE m.partyId = :partyId")
 	Long countMember(@Param("partyId") Long partyId);
 	
-	@Query("DELETE FROM Member m WHERE m.partyId = :partyId")
-	void deleteAllByPartyId(@Param("partyId") Long partyId);
+//	@Query("DELETE FROM Member m WHERE m.partyId = :partyId")
+	void deleteAllByPartyId(Long partyId);
 
 }

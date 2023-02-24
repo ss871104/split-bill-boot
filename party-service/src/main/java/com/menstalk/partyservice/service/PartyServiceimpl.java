@@ -52,9 +52,9 @@ public class PartyServiceimpl implements PartyService {
 	public boolean deleteParty(Long partyId) {
 		try {
 			
-			partyRepository.deleteById(partyId);
 			memberProxy.deleteAllByPartyId(partyId);
-			
+			partyRepository.deleteById(partyId);
+					
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
