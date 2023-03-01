@@ -25,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional
-//@Primary
 public class BillServiceImpl implements BillService {
 
 	private final BillRepository billRepository;
@@ -35,10 +34,6 @@ public class BillServiceImpl implements BillService {
 	private final MemberProxy memberProxy;
 	private final KafkaTemplate<String, NewBillEvent> kafkaTemplate;
 	
-	private final BillService billService;
-	
-//	private final OtherBillServices otherBillServices;
-
 	@Override
 	public List<Bill> selectByPartyId(Long partyId) {
 
@@ -264,9 +259,9 @@ public class BillServiceImpl implements BillService {
 			billRepository.flush();
 			Long billId = bill.getBillId();
 			
-			billService.removeBill(billId);
+			removeBill(billId);
 			
-			billService.addBillTransfer(billPlacedRequest);
+			addBillTransfer(billPlacedRequest);
 			
 			
 
@@ -288,9 +283,9 @@ public class BillServiceImpl implements BillService {
 			billRepository.flush();
 			Long billId = bill.getBillId();
 			
-			billService.removeBill(billId);
+			removeBill(billId);
 			
-			billService.addBillTransfer(billPlacedRequest);
+			addBillTransfer(billPlacedRequest);
 			
 			
 
@@ -311,9 +306,9 @@ public class BillServiceImpl implements BillService {
 			billRepository.flush();
 			Long billId = bill.getBillId();
 			
-			billService.removeBill(billId);
+			removeBill(billId);
 			
-			billService.addBillTransfer(billPlacedRequest);
+			addBillTransfer(billPlacedRequest);
 			
 			
 
