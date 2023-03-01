@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.context.annotation.Primary;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional
-@Primary
+//@Primary
 public class BillServiceImpl implements BillService {
 
 	private final BillRepository billRepository;
@@ -36,7 +35,9 @@ public class BillServiceImpl implements BillService {
 	private final MemberProxy memberProxy;
 	private final KafkaTemplate<String, NewBillEvent> kafkaTemplate;
 	
-	private final OtherBillServices otherBillServices;
+	private final BillService billService;
+	
+//	private final OtherBillServices otherBillServices;
 
 	@Override
 	public List<Bill> selectByPartyId(Long partyId) {
@@ -263,9 +264,9 @@ public class BillServiceImpl implements BillService {
 			billRepository.flush();
 			Long billId = bill.getBillId();
 			
-			otherBillServices.removeBill(billId);
+			billService.removeBill(billId);
 			
-			otherBillServices.addBillTransfer(billPlacedRequest);
+			billService.addBillTransfer(billPlacedRequest);
 			
 			
 
@@ -287,9 +288,9 @@ public class BillServiceImpl implements BillService {
 			billRepository.flush();
 			Long billId = bill.getBillId();
 			
-			otherBillServices.removeBill(billId);
+			billService.removeBill(billId);
 			
-			otherBillServices.addBillTransfer(billPlacedRequest);
+			billService.addBillTransfer(billPlacedRequest);
 			
 			
 
@@ -310,9 +311,9 @@ public class BillServiceImpl implements BillService {
 			billRepository.flush();
 			Long billId = bill.getBillId();
 			
-			otherBillServices.removeBill(billId);
+			billService.removeBill(billId);
 			
-			otherBillServices.addBillTransfer(billPlacedRequest);
+			billService.addBillTransfer(billPlacedRequest);
 			
 			
 
