@@ -1,17 +1,17 @@
-package com.menstalk.notificationservice.dto;
+package com.menstalk.memberservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class InviteMemberRequest {
-    private Long notificationId;
-    private Long userId;
-    private Long memberId;
+public class AddMemberRequest {
     private Long partyId;
+    private List<Long> userIdList;
 }

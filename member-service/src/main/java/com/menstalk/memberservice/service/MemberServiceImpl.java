@@ -1,12 +1,16 @@
 package com.menstalk.memberservice.service; 
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.menstalk.memberservice.domain.MemberStatus;
+import com.menstalk.memberservice.dto.AddMemberRequest;
 import com.menstalk.memberservice.event.InviteMemberEvent;
+import com.menstalk.memberservice.proxy.UserProxy;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +30,7 @@ public class MemberServiceImpl implements MemberService {
 
 	private final MemberRepository memberRepository;
 	private final PartyProxy updateQtyProxy;
+	private final UserProxy userProxy;
 	private final KafkaTemplate<String, InviteMemberEvent> kafkaTemplate;
 	
 	@Override
@@ -52,6 +57,7 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public boolean addMemberByCreateParty(Member member) {
 		if (member.getMemberId() == null) {
+			member.setBalance(0L);
 			memberRepository.save(member);
 			return true;
 		}
@@ -59,31 +65,47 @@ public class MemberServiceImpl implements MemberService {
 	}
 	
 	@Override
-	public boolean addMembers(Member member) {
-		if (member.getMemberId() == null) {
-			member = memberRepository.save(member);
-			memberRepository.flush();
-			Long memberQty = memberRepository.countMember(member.getPartyId());
-			updateQtyProxy.updateQty(member.getPartyId(), memberQty);
+	public boolean addMembers(AddMemberRequest addMemberRequest) {
+		List<Member> memberList = addMemberRequest.getUserIdList().stream()
+				.map(x ->
+					Member.builder()
+						.partyId(addMemberRequest.getPartyId())
+						.userId(x)
+						.memberStatus(MemberStatus.PENDING)
+						.balance(0L)
+						.createTime(LocalDateTime.now())
+						.memberNickname(userProxy.findUserByUserId(x).getName())
+						.build())
+				.collect(Collectors.toList());
+		memberList = memberRepository.saveAll(memberList);
+		memberRepository.flush();
 
-			InviteMemberEvent event = InviteMemberEvent.builder()
-							.userId(member.getUserId())
-							.memberId(member.getMemberId())
-							.build();
-			kafkaTemplate.send("inviteMemberTopic", event);
-			return true;
-		}
-		return false;
+		memberList.forEach(
+				x -> kafkaTemplate.send("inviteMemberTopic", InviteMemberEvent.builder()
+						.userId(x.getUserId())
+						.memberId(x.getMemberId())
+						.partyId(x.getPartyId())
+						.build())
+		);
+
+		return true;
 
 	}
 
 	@Override
-	public boolean updateMember(Member member) {
-		if (memberRepository.existsById(member.getMemberId())) {
+	public boolean updateStatus(Long memberId) {
+		try {
+			Member member = memberRepository.findById(memberId).orElseThrow();
+			member.setMemberStatus(MemberStatus.JOINED);
 			memberRepository.save(member);
+			Long memberQty = memberRepository.countMember(member.getPartyId());
+			updateQtyProxy.updateQty(member.getPartyId(), memberQty);
 			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
 		}
-		return false;
+
 	}
 
 	
@@ -102,16 +124,21 @@ public class MemberServiceImpl implements MemberService {
 	
 	@Override
 	public boolean deleteMemberById(Long memberId) {
-		Member member = new Member();
-		if (member.getMemberId() != null) {
-			memberRepository.deleteById(memberId);
-			Long memberQty = memberRepository.countMember(member.getPartyId());
-			updateQtyProxy.updateQty(member.getPartyId(), memberQty);
-			return true;
-			
+		try {
+			Member member = memberRepository.findById(memberId).orElseThrow();
+			if (member.getMemberStatus() == MemberStatus.PENDING) {
+				memberRepository.deleteById(memberId);
+				return true;
+			} else {
+				memberRepository.deleteById(memberId);
+				Long memberQty = memberRepository.countMember(member.getPartyId());
+				updateQtyProxy.updateQty(member.getPartyId(), memberQty);
+				return true;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
 		}
-		return false;
-
 	}
 
 	@Override

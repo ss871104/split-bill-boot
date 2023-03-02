@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class InviteMemberEvent {
     private Long userId;
     private Long memberId;
+    private Long partyId;
 }

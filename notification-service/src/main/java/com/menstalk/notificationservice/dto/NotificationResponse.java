@@ -24,6 +24,7 @@ public class NotificationResponse {
     private String content;
     private NotificationStatus status;
     private LocalDateTime createTime;
-    private List<String> urlList;
+    private String acceptUrl;
+    private String refuseUrl;
 
 }

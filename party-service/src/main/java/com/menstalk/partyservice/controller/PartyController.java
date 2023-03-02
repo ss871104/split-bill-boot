@@ -81,9 +81,8 @@ public class PartyController {
 	@ApiOperation("(External) find Partys by userId")
 	public List<Party> findPartyByUserId(@RequestHeader(name = "id") Long userId) {
 		
-			return partyService.findPartysByPartyIds(userId);
-
-		}
+		return partyService.findPartysByPartyIds(userId);
+	}
 	
 
 	@GetMapping("/findPartyNameByPartyId/{partyId}")

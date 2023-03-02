@@ -3,16 +3,10 @@ package com.menstalk.memberservice.controller;
 
 import java.util.List;
 
+import com.menstalk.memberservice.dto.AddMemberRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.menstalk.memberservice.domain.Member;
 import com.menstalk.memberservice.dto.BillAddedRequest;
@@ -62,20 +56,20 @@ public class MemberController {
 
 	@PostMapping("/addMembers")
 	@ApiOperation("(Internal)Add members")
-	public ResponseEntity<String> addMembers(@RequestBody Member member) {
+	public ResponseEntity<String> addMembers(@RequestBody AddMemberRequest addMemberRequest) {
 
-		if (memberService.addMembers(member)) {
+		if (memberService.addMembers(addMemberRequest)) {
 			return new ResponseEntity<String>("新增成功", HttpStatus.ACCEPTED);
 		} else {
 			return new ResponseEntity<String>("新增失敗", HttpStatus.NOT_ACCEPTABLE);
 		}
 	}
 
-	@PutMapping("/updateMember")
-	@ApiOperation("(External)Update member")
-	public ResponseEntity<String> updateMember(@RequestBody Member member) {
+	@PutMapping("/updateStatus")
+	@ApiOperation("(External)Update member status")
+	public ResponseEntity<String> updateMember(@RequestParam("memberId") Long memberId) {
 
-		if (memberService.updateMember(member)) {
+		if (memberService.updateStatus(memberId)) {
 			return new ResponseEntity<String>("修改成功", HttpStatus.ACCEPTED);
 		} else {
 			return new ResponseEntity<String>("修改失敗", HttpStatus.NOT_ACCEPTABLE);
@@ -93,9 +87,9 @@ public class MemberController {
 			return new ResponseEntity<String>("刪除失敗", HttpStatus.NOT_ACCEPTABLE);
 		}
 	}
-	@DeleteMapping("/deleteMemberById/{id}")
+	@DeleteMapping("/deleteMemberById")
 	@ApiOperation("(External)Delete member by id")
-	public ResponseEntity<String> deleteMemberById(@PathVariable Long memberId) {
+	public ResponseEntity<String> deleteMemberById(@RequestParam("memberId") Long memberId) {
 		if (memberService.deleteMemberById(memberId)) {
 			return new ResponseEntity<String>("刪除成功", HttpStatus.ACCEPTED);
 		} else {
