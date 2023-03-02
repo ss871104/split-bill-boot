@@ -1,6 +1,5 @@
 package com.menstalk.notificationservice.service;
 
-import com.menstalk.notificationservice.domain.Notification;
 import com.menstalk.notificationservice.dto.*;
 
 public interface NotificationService {

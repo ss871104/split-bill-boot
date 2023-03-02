@@ -6,5 +6,6 @@ create table notification(
     title varchar(255),
     content text,
 	`status` int(1),
-	create_time datetime
+	create_time datetime,
+	member_id bigint
 );

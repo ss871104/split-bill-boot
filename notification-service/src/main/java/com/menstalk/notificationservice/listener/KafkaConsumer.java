@@ -35,6 +35,7 @@ public class KafkaConsumer {
 						.content(NotificationType.INVITE.getContent().formatted(partyName))
 						.createTime(LocalDateTime.now())
 						.status(NotificationStatus.UNREAD)
+						.memberId(inviteMemberRequest.getMemberId())
 						.build();
 
 		notificationRepository.save(notification);

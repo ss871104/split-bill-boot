@@ -31,5 +31,6 @@ public class Notification {
 	@Enumerated(EnumType.ORDINAL)
 	private NotificationStatus status;
 	private LocalDateTime createTime;
+	private Long memberId;
 
 }
