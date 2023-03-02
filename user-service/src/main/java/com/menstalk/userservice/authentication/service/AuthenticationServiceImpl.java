@@ -5,7 +5,6 @@ import com.menstalk.userservice.authentication.dto.RegisterRequest;
 import com.menstalk.userservice.authentication.dto.TokenResponse;
 import com.menstalk.userservice.authentication.handler.UsernameDuplicateException;
 import com.menstalk.userservice.authentication.jwt.JwtUtil;
-import com.menstalk.userservice.event.NewUserEvent;
 import com.menstalk.userservice.authentication.dto.UserAuthResponse;
 import com.menstalk.userservice.user.domain.User;
 import com.menstalk.userservice.user.mapper.UserConvert;
@@ -33,7 +32,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserConvert userConvert;
     private final JwtUtil jwtUtil;
     private final RedisTemplate<String, String> redisTemplate;
-    private final KafkaTemplate<String, NewUserEvent> kafkaTemplate;
     @Override
     public TokenResponse register(RegisterRequest registerRequest) {
         User user = User.builder()
@@ -48,8 +46,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         	userRepository.flush();
             String jwtToken = jwtUtil.generateToken(userConvert.userConvertToAuthResponse(user));
             
-            kafkaTemplate.send("newUserTopic", new NewUserEvent(user.getUserId(), user.getName()));
-
             redisTemplate.opsForValue().set("jwt:" + registerRequest.getUsername(), jwtToken, 3, TimeUnit.HOURS);
 
             return TokenResponse.builder().successful(true).token(jwtToken).build();

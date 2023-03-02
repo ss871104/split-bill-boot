@@ -35,7 +35,7 @@ public class BillController {
 	
 	@GetMapping("/{partyId}")
 	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation("Show Bill by PartyId")
+	@ApiOperation("(External) Show Bill by PartyId")
 	public List<Bill> selectById(@PathVariable Long partyId) {
 
 		return billService.selectByPartyId(partyId);
@@ -43,7 +43,7 @@ public class BillController {
 	}
 	
 	@PostMapping("/add")
-	@ApiOperation("Add Bill while adding BillDetail & updating Member Balance (BillType: 0=Transfer, 1=AA, 2=GoDutch)")
+	@ApiOperation("(External) Add Bill while adding BillDetail & updating Member Balance (BillType: 0=Transfer, 1=AA, 2=GoDutch)")
 	public ResponseEntity<String> addBill(@RequestBody BillPlacedRequest billPlacedRequest) {
 		
 		if (billPlacedRequest.getBillType() == BillType.TRANSFER) {
@@ -61,7 +61,7 @@ public class BillController {
 	}
 	
 	@PutMapping("/update")
-	@ApiOperation("Update Bill content (Will remove and add bill again")
+	@ApiOperation("(External) Update Bill content (Will remove and add bill again")
 	public ResponseEntity<String> updateBill(@RequestBody BillPlacedRequest billPlacedRequest) {
 		
 		if (billPlacedRequest.getBillType() == BillType.TRANSFER) {
@@ -79,7 +79,7 @@ public class BillController {
 	}
 	
 	@DeleteMapping("/delete/{billId}")
-	@ApiOperation("Delete Bill while deleting BillDetail & updating Member Balance")
+	@ApiOperation("(External) Delete Bill while deleting BillDetail & updating Member Balance")
 	public ResponseEntity<String> removeBill(@PathVariable Long billId) {
 		
 		if(billService.removeBill(billId)) {

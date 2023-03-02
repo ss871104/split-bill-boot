@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class NewBillRequest {
-	private Long notificationId;
-	private Long partyId;
-	private Long partyName;
-
+public class NewMemberRequest {
+    private Long notificationId;
+    private Long partyId;
+    private Long memberName;
 }

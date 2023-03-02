@@ -1,4 +1,4 @@
-package com.menstalk.userservice.event;
+package com.menstalk.notificationservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class NewUserEvent {
-	private Long userId;
-	private String name;
+public class ReadRequest {
+    private Long notificationId;
 
 }

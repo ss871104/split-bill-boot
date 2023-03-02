@@ -32,19 +32,19 @@ public class MemberController {
 	private final MemberService memberService;
 	
 	@GetMapping("/findUserIdByPartyId/{partyId}")
-	@ApiOperation("(Internal)Find userid by partyid")
+	@ApiOperation("(Internal)Find userid by partyId")
 	public List<Long> findUserIdBypartyId(@PathVariable Long partyId) {
 		return memberService.findUserIdByPartyId(partyId);
 	}
 	
 	@GetMapping("/findUserInPartysByUserId/{userId}")
-	@ApiOperation("(Internal)Find user in partys buy userid")
+	@ApiOperation("(Internal)Find user in partys by userid")
 	public List<Long> findUserInPartysByUserId(@PathVariable Long userId){
 		return memberService.findUserInPartysByUserId(userId);
 	}
 	
 	@GetMapping("/findMembersByPartyId/{partyId}")
-	@ApiOperation("(Internal)Find members by partyid")
+	@ApiOperation("(Internal)Find members by partyId")
 	public List<Member> findMembersByPartyId(@PathVariable Long partyId) {
 		return memberService.findMembersByPartyId(partyId);
 	}
@@ -72,7 +72,7 @@ public class MemberController {
 	}
 
 	@PutMapping("/updateMember")
-	@ApiOperation("Update member")
+	@ApiOperation("(External)Update member")
 	public ResponseEntity<String> updateMember(@RequestBody Member member) {
 
 		if (memberService.updateMember(member)) {
@@ -84,7 +84,7 @@ public class MemberController {
 	
 	
 	@DeleteMapping("/deleteMemberByPartyId/{partyId}")
-	@ApiOperation("(Internal)Delete member by partyid")
+	@ApiOperation("(Internal)Delete member by partyId")
 	public ResponseEntity<String> deleteAllByPartyId(@PathVariable Long partyId) {
 		if (memberService.deleteMemberByPartyId(partyId)) {
 			return new ResponseEntity<String>("刪除成功", HttpStatus.ACCEPTED);
@@ -94,7 +94,7 @@ public class MemberController {
 		}
 	}
 	@DeleteMapping("/deleteMemberById/{id}")
-	@ApiOperation("Delete member by id")
+	@ApiOperation("(External)Delete member by id")
 	public ResponseEntity<String> deleteMemberById(@PathVariable Long memberId) {
 		if (memberService.deleteMemberById(memberId)) {
 			return new ResponseEntity<String>("刪除成功", HttpStatus.ACCEPTED);
@@ -104,7 +104,7 @@ public class MemberController {
 	}
 
 	@PutMapping("/updateBalanceAdd")
-	@ApiOperation("(Internal)Update balace")
+	@ApiOperation("(Internal)Update balance when added")
 	public ResponseEntity<String> updateBalanceAdd(@RequestBody List<BillAddedRequest> list) {
 		if (memberService.updateBalanceAdd(list)) {
 			return new ResponseEntity<String>("修改金額成功", HttpStatus.ACCEPTED);
@@ -114,7 +114,7 @@ public class MemberController {
 	}
 
 	@PutMapping("/updateBalanceDelete")
-	@ApiOperation("(Internal)Update balance")
+	@ApiOperation("(Internal)Update balance when deleted")
 	public ResponseEntity<String> updateBalanceDelete(@RequestBody List<BillAddedRequest> list) {
 		if (memberService.updateBalanceDelete(list)) {
 			return new ResponseEntity<String>("修改金額成功", HttpStatus.ACCEPTED);

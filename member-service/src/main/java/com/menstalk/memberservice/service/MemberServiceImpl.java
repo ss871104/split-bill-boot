@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.menstalk.memberservice.event.InviteMemberEvent;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +26,7 @@ public class MemberServiceImpl implements MemberService {
 
 	private final MemberRepository memberRepository;
 	private final PartyProxy updateQtyProxy;
+	private final KafkaTemplate<String, InviteMemberEvent> kafkaTemplate;
 	
 	@Override
 	public List<Long> findUserIdByPartyId(Long partyId) {
@@ -58,9 +61,16 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public boolean addMembers(Member member) {
 		if (member.getMemberId() == null) {
-			memberRepository.save(member);
+			member = memberRepository.save(member);
+			memberRepository.flush();
 			Long memberQty = memberRepository.countMember(member.getPartyId());
 			updateQtyProxy.updateQty(member.getPartyId(), memberQty);
+
+			InviteMemberEvent event = InviteMemberEvent.builder()
+							.userId(member.getUserId())
+							.memberId(member.getMemberId())
+							.build();
+			kafkaTemplate.send("inviteMemberTopic", event);
 			return true;
 		}
 		return false;

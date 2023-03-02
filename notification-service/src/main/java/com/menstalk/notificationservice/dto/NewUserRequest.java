@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class NewUserRequest {
 	private Long notificationId;
 	private Long userId;
-	private String name;
+	private String userName;
 
 }

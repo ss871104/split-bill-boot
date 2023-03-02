@@ -77,8 +77,8 @@ public class PartyController {
 		}
 	}
 
-	@GetMapping("/findPartysByPartyIds")
-	@ApiOperation("(Internal) find Partys by partyId")
+	@GetMapping("/findPartysByUserId")
+	@ApiOperation("(External) find Partys by userId")
 	public List<Party> findPartyByUserId(@RequestHeader(name = "id") Long userId) {
 		
 			return partyService.findPartysByPartyIds(userId);
@@ -87,7 +87,7 @@ public class PartyController {
 	
 
 	@GetMapping("/findPartyNameByPartyId/{partyId}")
-	@ApiOperation("(Ixternal) find PartyName by partyId")
+	@ApiOperation("(Internal) find PartyName by partyId")
 	public String findPartyNameByPartyId(@PathVariable Long partyId) {
 		
 			return partyService.findPartyNameByPartyId(partyId);

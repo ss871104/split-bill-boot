@@ -15,7 +15,6 @@ import com.menstalk.billservice.domain.BillDetail;
 import com.menstalk.billservice.domain.BillDetailType;
 import com.menstalk.billservice.dto.BillAddedRequest;
 import com.menstalk.billservice.dto.BillPlacedRequest;
-import com.menstalk.billservice.event.NewBillEvent;
 import com.menstalk.billservice.mapper.BillMapper;
 import com.menstalk.billservice.proxy.MemberProxy;
 import com.menstalk.billservice.repository.BillDetailRepository;
@@ -32,8 +31,7 @@ public class BillServiceImpl implements BillService {
 	private final BillDetailService billDetailService;
 	private final BillMapper billMapper;
 	private final MemberProxy memberProxy;
-	private final KafkaTemplate<String, NewBillEvent> kafkaTemplate;
-	
+
 	@Override
 	public List<Bill> selectByPartyId(Long partyId) {
 
@@ -87,9 +85,6 @@ public class BillServiceImpl implements BillService {
 			// 利用OpenFeign抓updateBalance的API
 			memberProxy.updateBalanceByAdd(billAddedRequest);
 			
-			// 利用KafkaTemplate傳送Consumer需要的參數
-			kafkaTemplate.send("newBillTopic", new NewBillEvent(bill.getPartyId()));
-
 			return true;
 
 		} catch (Exception e) {
@@ -181,9 +176,6 @@ public class BillServiceImpl implements BillService {
 			// 利用OpenFeign抓updateBalance的API
 			memberProxy.updateBalanceByAdd(billAddedRequest);
 			
-			// 利用KafkaTemplate傳送Consumer需要的參數
-			kafkaTemplate.send("newBillTopic", new NewBillEvent(bill.getPartyId()));
-
 			return true;
 
 		} catch (Exception e) {
@@ -238,9 +230,6 @@ public class BillServiceImpl implements BillService {
 			// 利用OpenFeign抓updateBalance的API
 			memberProxy.updateBalanceByAdd(billAddedRequest);
 			
-			// 利用KafkaTemplate傳送Consumer需要的參數
-			kafkaTemplate.send("newBillTopic", new NewBillEvent(bill.getPartyId()));
-
 			return true;
 
 		} catch (Exception e) {

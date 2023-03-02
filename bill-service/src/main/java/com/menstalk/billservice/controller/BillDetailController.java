@@ -28,7 +28,7 @@ public class BillDetailController {
 	
 	@GetMapping("/{billId}")
 	@ResponseStatus(HttpStatus.OK)
-	@ApiOperation("Show BillDetail by BillId")
+	@ApiOperation("(External) Show BillDetail by BillId")
 	public List<BillDetail> selectById(@PathVariable Long billId) {
 		
 		return billDetailService.selectByBillId(billId);
