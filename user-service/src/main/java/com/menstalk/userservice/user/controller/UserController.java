@@ -21,5 +21,12 @@ public class UserController {
     public ResponseEntity<UserResponse> getByUserId(@RequestHeader(name = "id") String userId) {
         return new ResponseEntity<>(userService.getByUserId(Long.valueOf(userId)), HttpStatus.OK);
     }
+    
+    @GetMapping("/{userId}")
+    @ApiOperation("(Internal) Find user by userId for feign")
+    public ResponseEntity<UserResponse> findUserByUserId(@PathVariable("userId") Long userId) {
+        return new ResponseEntity<>(userService.getByUserId(userId), HttpStatus.OK);
+        
+    }
 
 }
