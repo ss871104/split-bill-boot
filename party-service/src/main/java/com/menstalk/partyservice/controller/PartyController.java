@@ -20,18 +20,21 @@ import com.menstalk.partyservice.domain.Party;
 import com.menstalk.partyservice.dto.CountMember;
 import com.menstalk.partyservice.service.PartyService;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 
 @RequestMapping("/api/party")
 @RestController
 @RequiredArgsConstructor
-//@CrossOrigin
+@Api(tags = "Party Api")
 
 public class PartyController {
 
 	private final PartyService partyService;
 
 	@PostMapping("/add")
+	@ApiOperation("(External) Add by partyname")
 	public ResponseEntity<String> addParty(@RequestBody Party party, @RequestHeader(name = "id") String userId) {
 		if (partyService.addParty(party, Long.valueOf(userId))) {
 			return new ResponseEntity<String>("新增成功", HttpStatus.ACCEPTED);
@@ -41,6 +44,7 @@ public class PartyController {
 	}
 
 	@PutMapping("/update/{partyId}")
+	@ApiOperation("(External) update by partyname")
 	public ResponseEntity<String> updateParty(@PathVariable Long partyId,
 			@RequestParam(value = "partyName", required = true) String partyName) {
 
@@ -52,6 +56,7 @@ public class PartyController {
 	}
 
 	@DeleteMapping("/delete/{partyId}")
+	@ApiOperation("(External) delete by partyname, partyId, memberQuantity ")
 	public ResponseEntity<String> deleteParty(@PathVariable Long partyId) {
 		if (partyService.deleteParty(partyId)) {
 			return new ResponseEntity<String>("刪除成功", HttpStatus.ACCEPTED);
@@ -61,6 +66,7 @@ public class PartyController {
 	}
 
 	@PutMapping("/updateQty/{partyId}")
+	@ApiOperation("(External) update by memberQuantity")
 	public ResponseEntity<String> updateQty(@PathVariable Long partyId,
 			@RequestParam(value = "memberQty", required = true) Long memberQty) {
 
@@ -72,6 +78,7 @@ public class PartyController {
 	}
 
 	@GetMapping("/findPartysByPartyIds")
+	@ApiOperation("(Internal) find Partys by partyId")
 	public List<Party> findPartyByUserId(@RequestHeader(name = "id") Long userId) {
 		
 			return partyService.findPartysByPartyIds(userId);
@@ -80,6 +87,7 @@ public class PartyController {
 	
 
 	@GetMapping("/findPartyNameByPartyId/{partyId}")
+	@ApiOperation("(Ixternal) find PartyName by partyId")
 	public String findPartyNameByPartyId(@PathVariable Long partyId) {
 		
 			return partyService.findPartyNameByPartyId(partyId);

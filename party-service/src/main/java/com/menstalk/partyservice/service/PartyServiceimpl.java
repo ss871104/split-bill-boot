@@ -1,10 +1,9 @@
 package com.menstalk.partyservice.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+
 import java.util.List;
 
-import org.apache.tomcat.jni.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +12,7 @@ import com.menstalk.partyservice.dto.Member;
 import com.menstalk.partyservice.dto.MemberStatus;
 import com.menstalk.partyservice.mapper.PartyMapper;
 import com.menstalk.partyservice.proxy.MemberProxy;
+import com.menstalk.partyservice.proxy.UserProxy;
 import com.menstalk.partyservice.repository.PartyRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +25,7 @@ public class PartyServiceimpl implements PartyService {
 	private final PartyRepository partyRepository;
 	private final MemberProxy memberProxy;
 	private final PartyMapper partyMapper;
+	private final UserProxy userProxy;
 
 	@Override
 	public List<Party> selectByParty(Long partyId) {
@@ -37,24 +38,24 @@ public class PartyServiceimpl implements PartyService {
 		if (party.getPartyId() == null) {
 			party.setMemberQuantity(1L);
 			party = partyRepository.save(party);
-			partyRepository.flush();
+			partyRepository.flush(); // 確保目前在應用程式中做出的修改都已經被保存到資料庫中。
+			String name = userProxy.findUserByUserId(userId).getName();
 			Long partyId = party.getPartyId();
-			Member member = Member.builder().userId(userId).partyId(partyId).createTime(LocalDateTime.now())
-					.memberStatus(MemberStatus.JOINED).build();
-
+			Member member = Member.builder().memberNickname(name).userId(userId).partyId(partyId)
+					.createTime(LocalDateTime.now()).memberStatus(MemberStatus.JOINED).build();
 			memberProxy.addMemberByCreateParty(member);
 			return true;
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean deleteParty(Long partyId) {
 		try {
-			
+
 			memberProxy.deleteAllByPartyId(partyId);
 			partyRepository.deleteById(partyId);
-					
+
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
