@@ -31,3 +31,4 @@ target
 .component
 .prefs
 *.factorypath
+.vscode/settings.json
