@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class NewMemberRequest {
-    private Long notificationId;
+
     private Long partyId;
     private Long memberName;
 }

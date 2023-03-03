@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class NewUserRequest {
-	private Long notificationId;
+	
 	private Long userId;
 	private String userName;
 
