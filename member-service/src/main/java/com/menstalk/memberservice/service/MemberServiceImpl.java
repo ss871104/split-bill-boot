@@ -9,7 +9,9 @@ import java.util.stream.Collectors;
 
 import com.menstalk.memberservice.domain.MemberStatus;
 import com.menstalk.memberservice.dto.AddMemberRequest;
+import com.menstalk.memberservice.dto.NewMemberRequest;
 import com.menstalk.memberservice.event.InviteMemberEvent;
+import com.menstalk.memberservice.proxy.NotificationProxy;
 import com.menstalk.memberservice.proxy.UserProxy;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,7 @@ public class MemberServiceImpl implements MemberService {
 	private final PartyProxy updateQtyProxy;
 	private final UserProxy userProxy;
 	private final KafkaTemplate<String, InviteMemberEvent> kafkaTemplate;
+	private final NotificationProxy notificationProxy;
 	
 	@Override
 	public List<Long> findUserIdByPartyId(Long partyId) {
@@ -100,6 +103,16 @@ public class MemberServiceImpl implements MemberService {
 			memberRepository.save(member);
 			Long memberQty = memberRepository.countMember(member.getPartyId());
 			updateQtyProxy.updateQty(member.getPartyId(), memberQty);
+
+			List<Long> userIds = memberRepository.findUserIdsByPartyIdWhereStatusIdJoined(member.getPartyId());
+
+			NewMemberRequest newMemberRequest = NewMemberRequest.builder()
+					.userIds(userIds)
+					.memberName(member.getMemberNickname())
+					.build();
+
+			notificationProxy.addNewMemberNotification(newMemberRequest);
+
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

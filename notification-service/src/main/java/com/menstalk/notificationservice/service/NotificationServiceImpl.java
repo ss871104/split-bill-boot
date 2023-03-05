@@ -1,12 +1,10 @@
 package com.menstalk.notificationservice.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.menstalk.notificationservice.mapper.NotificationMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +16,6 @@ import com.menstalk.notificationservice.dto.NewBillRequest;
 import com.menstalk.notificationservice.dto.NewMemberRequest;
 import com.menstalk.notificationservice.dto.NewUserRequest;
 import com.menstalk.notificationservice.dto.NotificationResponse;
-import com.menstalk.notificationservice.dto.ReadRequest;
 import com.menstalk.notificationservice.repository.NotificationRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -29,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class NotificationServiceImpl implements NotificationService{
 	
 	private final NotificationRepository notificationRepository; //依賴注入中的建構式注入。
+	private final NotificationMapper notificationMapper;
     
 	
 	@Override
@@ -53,14 +51,18 @@ public class NotificationServiceImpl implements NotificationService{
 	@Override
 	public boolean addNewBillNotification(NewBillRequest newBillRequest) {
 		try {
-		Notification notification = Notification.builder()
-				.userId(newBillRequest.getPartyId())
-				.title(NotificationType.BILL_ADD.getTitle())
-				.content(NotificationType.BILL_ADD.getContent().formatted(newBillRequest.getPartyName()))
-				.status(NotificationStatus.UNREAD)
-				.createTime(LocalDateTime.now())
-				.build();
-			notificationRepository.save(notification);
+			List<Notification> notificationList = newBillRequest.getUseridList().stream()
+					.map(x -> Notification.builder()
+							.userId(x)
+							.title(NotificationType.BILL_ADD.getTitle())
+							.content(NotificationType.BILL_ADD.getContent().formatted(newBillRequest.getPartyName()))
+							.status(NotificationStatus.UNREAD)
+							.createTime(LocalDateTime.now())
+							.build()
+					)
+					.collect(Collectors.toList());
+
+			notificationRepository.saveAll(notificationList);
 			return true;
 	} catch (Exception e) {
 		e.printStackTrace();
@@ -73,14 +75,18 @@ public class NotificationServiceImpl implements NotificationService{
 	public boolean addNewMemberNotification(NewMemberRequest newMemberRequest) {
 	
 			try {
-			Notification notification = Notification.builder()
-					.userId(newMemberRequest.getPartyId())
-					.title(NotificationType.JOIN.getTitle())
-					.content(NotificationType.JOIN.getContent().formatted(newMemberRequest.getMemberName()))
-					.status(NotificationStatus.UNREAD)
-					.createTime(LocalDateTime.now())
-					.build();
-				notificationRepository.save(notification);
+				List<Notification> notificationList = newMemberRequest.getUserIds().stream()
+						.map(x -> Notification.builder()
+								.userId(x)
+								.title(NotificationType.JOIN.getTitle())
+								.content(NotificationType.JOIN.getContent().formatted(newMemberRequest.getMemberName()))
+								.status(NotificationStatus.UNREAD)
+								.createTime(LocalDateTime.now())
+								.build()
+						)
+						.collect(Collectors.toList());
+
+				notificationRepository.saveAll(notificationList);
 				return true;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -92,45 +98,13 @@ public class NotificationServiceImpl implements NotificationService{
 	public List<NotificationResponse> findByUserId(Long userId) {
 		try {
 			List<Notification> notificationList = notificationRepository.findByUserId(userId);
-			
-			List<NotificationResponse> inviteNotificationList = notificationList.stream()
-						.filter(x -> x.getMemberId() != null)
-						.map(x -> 
-								NotificationResponse.builder()
-									.notificationId(x.getNotificationId())
-									.userId(x.getUserId())
-									.title(x.getTitle())
-									.content(x.getContent())
-									.createTime(x.getCreateTime())
-									.status(x.getStatus())
-									.memberId(x.getMemberId())
-									.build()
-						)
-						.collect(Collectors.toList());
-			
-			List<NotificationResponse> otherNotificationList = notificationList.stream()
-					.filter(x -> x.getMemberId() == null)
-					.map(x -> 
-							NotificationResponse.builder()
-								.notificationId(x.getNotificationId())
-								.userId(x.getUserId())
-								.title(x.getTitle())
-								.content(x.getContent())
-								.createTime(x.getCreateTime())
-								.status(x.getStatus())
-								.build()
-					)
+
+			List<NotificationResponse> result = notificationList.stream()
+					.map(notificationMapper::notificationToDto)
 					.collect(Collectors.toList());
+
+			return result;
 			
-			List<NotificationResponse> mergeNotificationList = new ArrayList<>();
-			
-			mergeNotificationList.addAll(inviteNotificationList);
-			mergeNotificationList.addAll(otherNotificationList);
-			
-			mergeNotificationList.sort(Comparator.comparing(NotificationResponse::getNotificationId));
-			
-			return mergeNotificationList;
-		
 		} catch(Exception e) {
 			e.printStackTrace();
 			return null;
@@ -138,9 +112,17 @@ public class NotificationServiceImpl implements NotificationService{
 	}
 
 	@Override
-	public boolean updateStatus(ReadRequest readRequest) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean updateStatus(Long notificationId) {
+		try {
+			Notification notification = notificationRepository.findById(notificationId).orElseThrow();
+			notification.setStatus(NotificationStatus.READ);
+			notificationRepository.save(notification);
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 }

@@ -23,4 +23,10 @@ public class UserServiceImpl implements UserService{
 
         return userConvert.userConvertToUserResponse(userRepository.findById(userId).orElseThrow());
     }
+
+    @Override
+    public UserResponse getByUsername(String username) {
+        return userConvert.userConvertToUserResponse(userRepository.findByUsername(username).orElse(null));
+    }
+
 }

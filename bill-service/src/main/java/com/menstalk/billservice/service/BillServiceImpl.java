@@ -6,6 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.menstalk.billservice.dto.Member;
+import com.menstalk.billservice.dto.NewBillRequest;
+import com.menstalk.billservice.proxy.NotificationProxy;
+import com.menstalk.billservice.proxy.PartyProxy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +34,8 @@ public class BillServiceImpl implements BillService {
 	private final BillDetailService billDetailService;
 	private final BillMapper billMapper;
 	private final MemberProxy memberProxy;
+	private final NotificationProxy notificationProxy;
+	private final PartyProxy partyProxy;
 
 	@Override
 	public List<Bill> selectByPartyId(Long partyId) {
@@ -83,6 +89,19 @@ public class BillServiceImpl implements BillService {
 					.collect(Collectors.toList());
 			// 利用OpenFeign抓updateBalance的API
 			memberProxy.updateBalanceByAdd(billAddedRequest);
+
+			List<Member> memberList = memberProxy.findMembersByPartyId(billPlacedRequest.getPartyId());
+			List<Long> userIds = memberList.stream()
+					.map(x -> x.getUserId())
+					.collect(Collectors.toList());
+
+			String partName = partyProxy.findPartyNameByPartyId(billPlacedRequest.getPartyId());
+
+			NewBillRequest newBillRequest = NewBillRequest.builder()
+							.useridList(userIds)
+							.partyName(partName)
+							.build();
+			notificationProxy.addNewBillNotification(newBillRequest);
 			
 			return true;
 
@@ -174,6 +193,19 @@ public class BillServiceImpl implements BillService {
 					.collect(Collectors.toList());
 			// 利用OpenFeign抓updateBalance的API
 			memberProxy.updateBalanceByAdd(billAddedRequest);
+
+			List<Member> memberList = memberProxy.findMembersByPartyId(billPlacedRequest.getPartyId());
+			List<Long> userIds = memberList.stream()
+					.map(x -> x.getUserId())
+					.collect(Collectors.toList());
+
+			String partName = partyProxy.findPartyNameByPartyId(billPlacedRequest.getPartyId());
+
+			NewBillRequest newBillRequest = NewBillRequest.builder()
+					.useridList(userIds)
+					.partyName(partName)
+					.build();
+			notificationProxy.addNewBillNotification(newBillRequest);
 			
 			return true;
 
@@ -228,6 +260,19 @@ public class BillServiceImpl implements BillService {
 					.collect(Collectors.toList());
 			// 利用OpenFeign抓updateBalance的API
 			memberProxy.updateBalanceByAdd(billAddedRequest);
+
+			List<Member> memberList = memberProxy.findMembersByPartyId(billPlacedRequest.getPartyId());
+			List<Long> userIds = memberList.stream()
+					.map(x -> x.getUserId())
+					.collect(Collectors.toList());
+
+			String partName = partyProxy.findPartyNameByPartyId(billPlacedRequest.getPartyId());
+
+			NewBillRequest newBillRequest = NewBillRequest.builder()
+					.useridList(userIds)
+					.partyName(partName)
+					.build();
+			notificationProxy.addNewBillNotification(newBillRequest);
 			
 			return true;
 
@@ -242,7 +287,6 @@ public class BillServiceImpl implements BillService {
 	public boolean updateBillTransfer(BillPlacedRequest billPlacedRequest) {
 
 		try {
-			
 			Bill bill = billRepository.save(billMapper.billPlacedRequestToBill(billPlacedRequest));
 			billRepository.flush();
 			Long billId = bill.getBillId();
@@ -250,8 +294,6 @@ public class BillServiceImpl implements BillService {
 			removeBill(billId);
 			
 			addBillTransfer(billPlacedRequest);
-			
-			
 
 		} catch (Exception e) {
 			e.printStackTrace();

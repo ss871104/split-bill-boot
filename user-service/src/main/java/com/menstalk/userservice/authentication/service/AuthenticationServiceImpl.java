@@ -1,11 +1,9 @@
 package com.menstalk.userservice.authentication.service;
 
-import com.menstalk.userservice.authentication.dto.LoginRequest;
-import com.menstalk.userservice.authentication.dto.RegisterRequest;
-import com.menstalk.userservice.authentication.dto.TokenResponse;
+import com.menstalk.userservice.authentication.dto.*;
 import com.menstalk.userservice.authentication.handler.UsernameDuplicateException;
 import com.menstalk.userservice.authentication.jwt.JwtUtil;
-import com.menstalk.userservice.authentication.dto.UserAuthResponse;
+import com.menstalk.userservice.authentication.proxy.NotificationProxy;
 import com.menstalk.userservice.user.domain.User;
 import com.menstalk.userservice.user.mapper.UserConvert;
 import com.menstalk.userservice.user.repository.UserRepository;
@@ -29,6 +27,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserConvert userConvert;
+    private final NotificationProxy notificationProxy;
     private final JwtUtil jwtUtil;
     private final RedisTemplate<String, String> redisTemplate;
     @Override
@@ -46,6 +45,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             String jwtToken = jwtUtil.generateToken(userConvert.userConvertToAuthResponse(user));
             
             redisTemplate.opsForValue().set("jwt:" + registerRequest.getUsername(), jwtToken, 3, TimeUnit.HOURS);
+
+            NewUserRequest newUserRequest = NewUserRequest.builder()
+                            .userId(user.getUserId())
+                            .userName(user.getName())
+                            .build();
+            notificationProxy.addNewUserNotification(newUserRequest);
 
             return TokenResponse.builder().successful(true).token(jwtToken).build();
         } catch (Exception e) {

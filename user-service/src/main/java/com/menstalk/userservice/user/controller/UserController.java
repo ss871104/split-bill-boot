@@ -26,7 +26,17 @@ public class UserController {
     @ApiOperation("(Internal) Find user by userId for feign")
     public ResponseEntity<UserResponse> findUserByUserId(@PathVariable("userId") Long userId) {
         return new ResponseEntity<>(userService.getByUserId(userId), HttpStatus.OK);
-        
+    }
+
+    @GetMapping("/{username}")
+    @ApiOperation("(Internal) Find user by username for search")
+    public ResponseEntity<UserResponse> findUserByUsername(@PathVariable("username") String username) {
+        UserResponse userResponse = userService.getByUsername(username);
+        if (userResponse != null) {
+            return new ResponseEntity<>(userService.getByUsername(username), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.OK);
+        }
     }
 
 }

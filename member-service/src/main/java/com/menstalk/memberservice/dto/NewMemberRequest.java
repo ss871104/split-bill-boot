@@ -1,4 +1,4 @@
-package com.menstalk.notificationservice.dto;
+package com.menstalk.memberservice.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class NewBillRequest {
-	private List<Long> useridList;
-	private String partyName;
-
+public class NewMemberRequest {
+    private List<Long> userIds;
+    private String memberName;
 }

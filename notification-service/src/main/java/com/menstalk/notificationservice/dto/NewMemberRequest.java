@@ -5,12 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 public class NewMemberRequest {
 
-    private Long partyId;
-    private Long memberName;
+    private List<Long> userIds;
+    private String memberName;
 }

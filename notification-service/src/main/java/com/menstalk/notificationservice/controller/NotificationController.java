@@ -2,15 +2,10 @@ package com.menstalk.notificationservice.controller;
 
 import java.util.List;
 
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.menstalk.notificationservice.dto.NewBillRequest;
 import com.menstalk.notificationservice.dto.NewMemberRequest;
@@ -27,36 +22,50 @@ import lombok.RequiredArgsConstructor;
 @Api(tags = "Notification Api")
 public class NotificationController {
 
-	private final NotificationService NotificationService;
+	private final NotificationService notificationService;
 
 	@PostMapping("/addUserNotification")
+	@ApiOperation("(Internal) Add notification when new user added")
 	public boolean addNewUserNotification(@RequestBody NewUserRequest newUserRequest) {
-		if (NotificationService.addNewUserNotification(newUserRequest)) {
+		if (notificationService.addNewUserNotification(newUserRequest)) {
 			return true;
 		}
 		return false;
 	}
 
 	@PostMapping("/addBillNotification")
+	@ApiOperation("(Internal) Add notification when new bill added")
 	public boolean addNewBillNotification(@RequestBody NewBillRequest newBillRequest) {
-		if (NotificationService.addNewBillNotification(newBillRequest)) {
+		if (notificationService.addNewBillNotification(newBillRequest)) {
 			return true;
 		}
 		return false;
 	}
 
 	@PostMapping("/addMemberNotification")
-	public boolean addNewmemberNotification(@RequestBody NewMemberRequest newMemberRequest) {
-		if (NotificationService.addNewMemberNotification(newMemberRequest)) {
+	@ApiOperation("(Internal) Add notification when new member added")
+	public boolean addNewMemberNotification(@RequestBody NewMemberRequest newMemberRequest) {
+		if (notificationService.addNewMemberNotification(newMemberRequest)) {
 			return true;
 		}
 		return false;
 	}
 
 	@GetMapping("/findByUserId/{userId}")
-	public List<NotificationResponse> findByUserId(@PathVariable Long userId) {
+	@ApiOperation("(External) Find all notifications by userId")
+	public ResponseEntity<List<NotificationResponse>> findByUserId(@PathVariable Long userId) {
 
-		return NotificationService.findByUserId(userId);
+		return new ResponseEntity<>(notificationService.findByUserId(userId), HttpStatus.OK);
+
+	}
+
+	@PutMapping("/updateStatus")
+	@ApiOperation("(External) Update notification status to read by notificationId")
+	public boolean updateStatusById(@RequestParam("notificationId") Long notificationId) {
+		if (notificationService.updateStatus(notificationId)) {
+			return true;
+		}
+		return false;
 
 	}
 }
