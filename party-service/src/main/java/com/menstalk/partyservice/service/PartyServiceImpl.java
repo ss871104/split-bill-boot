@@ -1,30 +1,25 @@
 package com.menstalk.partyservice.service;
 
-import java.time.LocalDateTime;
-
-import java.util.List;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.menstalk.partyservice.domain.Party;
 import com.menstalk.partyservice.dto.Member;
 import com.menstalk.partyservice.dto.MemberStatus;
-import com.menstalk.partyservice.mapper.PartyMapper;
 import com.menstalk.partyservice.proxy.MemberProxy;
 import com.menstalk.partyservice.proxy.UserProxy;
 import com.menstalk.partyservice.repository.PartyRepository;
-
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class PartyServiceimpl implements PartyService {
+public class PartyServiceImpl implements PartyService {
 
 	private final PartyRepository partyRepository;
 	private final MemberProxy memberProxy;
-	private final PartyMapper partyMapper;
 	private final UserProxy userProxy;
 
 	@Override

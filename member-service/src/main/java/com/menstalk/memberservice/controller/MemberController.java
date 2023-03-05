@@ -1,20 +1,18 @@
 package com.menstalk.memberservice.controller;
 
 
-import java.util.List;
-
+import com.menstalk.memberservice.domain.Member;
 import com.menstalk.memberservice.dto.AddMemberRequest;
+import com.menstalk.memberservice.dto.BillAddedRequest;
+import com.menstalk.memberservice.service.MemberService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.menstalk.memberservice.domain.Member;
-import com.menstalk.memberservice.dto.BillAddedRequest;
-import com.menstalk.memberservice.service.MemberService;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 
 @RequestMapping("/api/member")
 @RestController

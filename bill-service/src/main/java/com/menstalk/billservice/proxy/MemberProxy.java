@@ -1,16 +1,14 @@
 package com.menstalk.billservice.proxy;
 
-import java.util.List;
-
+import com.menstalk.billservice.dto.BillAddedRequest;
 import com.menstalk.billservice.dto.Member;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.menstalk.billservice.dto.BillAddedRequest;
+import java.util.List;
 
 
 @FeignClient("member-service")

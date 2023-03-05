@@ -1,9 +1,9 @@
 package com.menstalk.billservice.repository;
 
-import java.util.List;
-
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.menstalk.billservice.domain.Bill;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 public interface BillRepository extends JpaRepository<Bill, Long>{
 	

@@ -1,7 +1,7 @@
 package com.menstalk.userservice.user.mapper;
 
-import com.menstalk.userservice.user.domain.User;
 import com.menstalk.userservice.authentication.dto.UserAuthResponse;
+import com.menstalk.userservice.user.domain.User;
 import com.menstalk.userservice.user.dto.UserResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

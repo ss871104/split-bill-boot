@@ -3,7 +3,6 @@ package com.menstalk.billservice.domain;
 import lombok.*;
 
 import javax.persistence.*;
-
 import java.time.LocalDateTime;
 
 @Getter

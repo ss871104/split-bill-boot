@@ -1,22 +1,17 @@
 package com.menstalk.notificationservice.listener;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.menstalk.notificationservice.domain.Notification;
 import com.menstalk.notificationservice.domain.NotificationStatus;
 import com.menstalk.notificationservice.domain.NotificationType;
 import com.menstalk.notificationservice.dto.InviteMemberRequest;
 import com.menstalk.notificationservice.proxy.PartyProxy;
+import com.menstalk.notificationservice.repository.NotificationRepository;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
-import com.menstalk.notificationservice.dto.NewBillRequest;
-import com.menstalk.notificationservice.repository.NotificationRepository;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor

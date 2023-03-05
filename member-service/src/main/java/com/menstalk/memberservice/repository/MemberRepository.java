@@ -1,12 +1,11 @@
 package com.menstalk.memberservice.repository;
 
-import java.util.List;
-
+import com.menstalk.memberservice.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import com.menstalk.memberservice.domain.Member;
+import java.util.List;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 	@Query("SELECT m FROM Member m WHERE m.partyId = :partyId")

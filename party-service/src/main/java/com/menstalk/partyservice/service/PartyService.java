@@ -1,8 +1,8 @@
 package com.menstalk.partyservice.service;
 
-import java.util.List;
-
 import com.menstalk.partyservice.domain.Party;
+
+import java.util.List;
 
 public interface PartyService {
 	public List<Party> selectByParty(Long partyId);

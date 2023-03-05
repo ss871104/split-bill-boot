@@ -1,4 +1,20 @@
-package com.menstalk.memberservice.service; 
+package com.menstalk.memberservice.service;
+
+import com.menstalk.memberservice.domain.Member;
+import com.menstalk.memberservice.domain.MemberStatus;
+import com.menstalk.memberservice.dto.AddMemberRequest;
+import com.menstalk.memberservice.dto.BillAddedRequest;
+import com.menstalk.memberservice.dto.BillDetailType;
+import com.menstalk.memberservice.dto.NewMemberRequest;
+import com.menstalk.memberservice.event.InviteMemberEvent;
+import com.menstalk.memberservice.proxy.NotificationProxy;
+import com.menstalk.memberservice.proxy.PartyProxy;
+import com.menstalk.memberservice.proxy.UserProxy;
+import com.menstalk.memberservice.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -6,24 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import com.menstalk.memberservice.domain.MemberStatus;
-import com.menstalk.memberservice.dto.AddMemberRequest;
-import com.menstalk.memberservice.dto.NewMemberRequest;
-import com.menstalk.memberservice.event.InviteMemberEvent;
-import com.menstalk.memberservice.proxy.NotificationProxy;
-import com.menstalk.memberservice.proxy.UserProxy;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.menstalk.memberservice.domain.Member;
-import com.menstalk.memberservice.dto.BillAddedRequest;
-import com.menstalk.memberservice.dto.BillDetailType;
-import com.menstalk.memberservice.proxy.PartyProxy;
-import com.menstalk.memberservice.repository.MemberRepository;
-
-import lombok.RequiredArgsConstructor;
 
 @Service // 用於標注某個類是服務類，告訴Spring容器需要將該類實例化，並且可以被其他類所引用。
 @RequiredArgsConstructor

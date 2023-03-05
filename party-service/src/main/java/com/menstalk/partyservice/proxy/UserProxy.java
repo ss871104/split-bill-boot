@@ -1,10 +1,9 @@
 package com.menstalk.partyservice.proxy;
 
+import com.menstalk.partyservice.dto.UserResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
-import com.menstalk.partyservice.dto.UserResponse;
 
 @FeignClient("user-service")
 public interface UserProxy {

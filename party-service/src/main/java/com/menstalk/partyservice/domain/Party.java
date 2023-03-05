@@ -1,25 +1,10 @@
 package com.menstalk.partyservice.domain;
 
-import java.time.LocalDateTime;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-//import com.menstalk.partyservice.domain.PartyStatus;
-import com.menstalk.partyservice.domain.Party;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter

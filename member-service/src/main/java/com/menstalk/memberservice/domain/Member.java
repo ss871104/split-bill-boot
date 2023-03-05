@@ -1,11 +1,10 @@
 package com.menstalk.memberservice.domain;
 
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Getter //用於自動生成類中的getter方法。
 @Setter //用於自動生成類中的setter方法。

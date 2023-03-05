@@ -1,8 +1,11 @@
 package com.menstalk.notificationservice.service;
 
-import java.util.List;
+import com.menstalk.notificationservice.dto.NewBillRequest;
+import com.menstalk.notificationservice.dto.NewMemberRequest;
+import com.menstalk.notificationservice.dto.NewUserRequest;
+import com.menstalk.notificationservice.dto.NotificationResponse;
 
-import com.menstalk.notificationservice.dto.*;
+import java.util.List;
 
 public interface NotificationService {
     boolean addNewUserNotification(NewUserRequest newUserRequest);

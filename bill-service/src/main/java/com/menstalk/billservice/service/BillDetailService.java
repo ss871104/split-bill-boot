@@ -1,8 +1,8 @@
 package com.menstalk.billservice.service;
 
-import java.util.List;
-
 import com.menstalk.billservice.domain.BillDetail;
+
+import java.util.List;
 
 public interface BillDetailService {
 	
