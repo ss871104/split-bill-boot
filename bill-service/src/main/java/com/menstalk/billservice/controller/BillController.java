@@ -73,10 +73,24 @@ public class BillController {
 		
 		if(billService.removeBill(billId)) {
 			return new ResponseEntity<String>("刪除成功", HttpStatus.ACCEPTED);			
-		}else {
+		} else {
 			return new ResponseEntity<String>("刪除失敗", HttpStatus.NOT_ACCEPTABLE);			
 			
 		}					
+	}
+
+	@GetMapping("/admin/findAll")
+	@ApiOperation("(Admin) FindAllBills")
+	public ResponseEntity<List<Bill>> findAll(@RequestHeader(value = "role", required = false) String role) {
+		try {
+			if (role.equals("admin")) {
+				return new ResponseEntity<>(billService.getAllBills(), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 }

@@ -24,7 +24,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 //	@Query("DELETE FROM Member m WHERE m.partyId = :partyId")
 	void deleteAllByPartyId(Long partyId);
 
-	@Query("select m.userId from Member m where m.partyId = :partyId and m.memberStatus = 0")
+	@Query("select m.userId from Member m where m.partyId = :partyId and m.memberStatus = 1")
 	List<Long> findUserIdsByPartyIdWhereStatusIdJoined(@Param("partyId") Long partyId);
 
 }

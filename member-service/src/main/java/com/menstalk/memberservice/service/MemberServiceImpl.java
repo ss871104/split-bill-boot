@@ -256,4 +256,9 @@ public class MemberServiceImpl implements MemberService {
 		return true;
 	}
 
+	@Override
+	public List<Member> getAllMembers() {
+		return memberRepository.findAll();
+	}
+
 }

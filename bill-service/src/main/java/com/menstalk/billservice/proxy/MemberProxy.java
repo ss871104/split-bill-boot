@@ -20,7 +20,7 @@ public interface MemberProxy {
 	@PutMapping("/api/member/updateBalanceDelete")
 	public void updateBalanceByDelete(@RequestBody List<BillAddedRequest> list);
 
-	@GetMapping("/findMembersByPartyId/{partyId}")
+	@GetMapping("/api/member/findMembersByPartyId/{partyId}")
 	public List<Member> findMembersByPartyId(@PathVariable("partyId") Long partyId);
 
 }

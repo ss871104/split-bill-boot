@@ -16,5 +16,6 @@ public interface BillService {
 	public boolean updateBillTransfer(BillPlacedRequest billPlacedRequest);
 	public boolean updateBillAA(BillPlacedRequest billPlacedRequest);
 	public boolean updateBillGoDutch(BillPlacedRequest billPlacedRequest);
+	List<Bill> getAllBills();
 
 }

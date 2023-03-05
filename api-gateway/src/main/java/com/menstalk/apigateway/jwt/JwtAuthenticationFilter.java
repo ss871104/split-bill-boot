@@ -45,7 +45,6 @@ public class JwtAuthenticationFilter implements GlobalFilter , Ordered {
             if (!token.startsWith("Bearer ")) {
 
                 return jwtExceptionHandler.tokenException(exchange, HttpStatus.UNAUTHORIZED, "Invalid token");
-
             }
 
             final String jwt = token.substring(7);
@@ -59,10 +58,13 @@ public class JwtAuthenticationFilter implements GlobalFilter , Ordered {
                 String username = this.jwtUtil.extractUsername(jwt);
                 UserAuthResponse userDetails = this.authorizationClient.findByUsername(username, exchange).block();
 
+                if (username.equals("andyuser") && jwtUtil.isTokenValid(jwt, userDetails)) {
+                    exchange.getRequest().mutate().header("role", "admin").build();
+                }
+
                 if (username != null && jwtUtil.isTokenValid(jwt, userDetails)) {
                     exchange.getRequest().mutate().header("id", userDetails.getUserId() + "").build();
                 } else{
-
                     return jwtExceptionHandler.tokenException(exchange, HttpStatus.BAD_REQUEST, "Invalid JWT token");
                 }
             } catch (SignatureException ex) {

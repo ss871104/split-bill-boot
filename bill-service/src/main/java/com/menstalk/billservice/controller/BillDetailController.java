@@ -6,6 +6,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +27,20 @@ public class BillDetailController {
 		
 		return billDetailService.selectByBillId(billId);
 		
+	}
+
+	@GetMapping("/admin/findAll")
+	@ApiOperation("(Admin) FindAllBillDetails")
+	public ResponseEntity<List<BillDetail>> findAll(@RequestHeader(value = "role", required = false) String role) {
+		try {
+			if (role.equals("admin")) {
+				return new ResponseEntity<>(billDetailService.getAllBillDetails(), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 }

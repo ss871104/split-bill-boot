@@ -109,4 +109,9 @@ public class PartyServiceImpl implements PartyService {
 	public String findPartyNameByPartyId(Long partyId) {
 		return partyRepository.findById(partyId).orElseThrow().getPartyName();
 	}
+
+	@Override
+	public List<Party> getAllPartys() {
+		return partyRepository.findAll();
+	}
 }

@@ -8,8 +8,7 @@ import com.menstalk.userservice.user.domain.User;
 import com.menstalk.userservice.user.mapper.UserConvert;
 import com.menstalk.userservice.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.CacheConfig;
-import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.*;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,6 +30,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final JwtUtil jwtUtil;
     private final RedisTemplate<String, String> redisTemplate;
     @Override
+    @Caching(
+            evict = {@CacheEvict(value = "UserList", allEntries = true)}
+    )
     public TokenResponse register(RegisterRequest registerRequest) {
         User user = User.builder()
                 .name(registerRequest.getName())

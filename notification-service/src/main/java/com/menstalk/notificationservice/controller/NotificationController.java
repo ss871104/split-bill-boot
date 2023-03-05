@@ -20,50 +20,63 @@ import java.util.List;
 @Api(tags = "Notification Api")
 public class NotificationController {
 
-	private final NotificationService notificationService;
+    private final NotificationService notificationService;
 
-	@PostMapping("/addUserNotification")
-	@ApiOperation("(Internal) Add notification when new user added")
-	public boolean addNewUserNotification(@RequestBody NewUserRequest newUserRequest) {
-		if (notificationService.addNewUserNotification(newUserRequest)) {
-			return true;
-		}
-		return false;
-	}
+    @PostMapping("/addUserNotification")
+    @ApiOperation("(Internal) Add notification when new user added")
+    public boolean addNewUserNotification(@RequestBody NewUserRequest newUserRequest) {
+        if (notificationService.addNewUserNotification(newUserRequest)) {
+            return true;
+        }
+        return false;
+    }
 
-	@PostMapping("/addBillNotification")
-	@ApiOperation("(Internal) Add notification when new bill added")
-	public boolean addNewBillNotification(@RequestBody NewBillRequest newBillRequest) {
-		if (notificationService.addNewBillNotification(newBillRequest)) {
-			return true;
-		}
-		return false;
-	}
+    @PostMapping("/addBillNotification")
+    @ApiOperation("(Internal) Add notification when new bill added")
+    public boolean addNewBillNotification(@RequestBody NewBillRequest newBillRequest) {
+        if (notificationService.addNewBillNotification(newBillRequest)) {
+            return true;
+        }
+        return false;
+    }
 
-	@PostMapping("/addMemberNotification")
-	@ApiOperation("(Internal) Add notification when new member added")
-	public boolean addNewMemberNotification(@RequestBody NewMemberRequest newMemberRequest) {
-		if (notificationService.addNewMemberNotification(newMemberRequest)) {
-			return true;
-		}
-		return false;
-	}
+    @PostMapping("/addMemberNotification")
+    @ApiOperation("(Internal) Add notification when new member added")
+    public boolean addNewMemberNotification(@RequestBody NewMemberRequest newMemberRequest) {
+        if (notificationService.addNewMemberNotification(newMemberRequest)) {
+            return true;
+        }
+        return false;
+    }
 
-	@GetMapping("/findByUserId/{userId}")
-	@ApiOperation("(External) Find all notifications by userId")
-	public ResponseEntity<List<NotificationResponse>> findByUserId(@PathVariable Long userId) {
+    @GetMapping("/findByUserId/{userId}")
+    @ApiOperation("(External) Find all notifications by userId")
+    public ResponseEntity<List<NotificationResponse>> findByUserId(@PathVariable Long userId) {
 
-		return new ResponseEntity<>(notificationService.findByUserId(userId), HttpStatus.OK);
+        return new ResponseEntity<>(notificationService.findByUserId(userId), HttpStatus.OK);
 
-	}
+    }
 
-	@PutMapping("/updateStatus")
-	@ApiOperation("(External) Update notification status to read by notificationId")
-	public boolean updateStatusById(@RequestParam("notificationId") Long notificationId) {
-		if (notificationService.updateStatus(notificationId)) {
-			return true;
-		}
-		return false;
+    @PutMapping("/updateStatus")
+    @ApiOperation("(External) Update notification status to read by notificationId")
+    public boolean updateStatusById(@RequestParam("notificationId") Long notificationId) {
+        if (notificationService.updateStatus(notificationId)) {
+            return true;
+        }
+        return false;
+    }
 
-	}
+    @GetMapping("/admin/findAll")
+    @ApiOperation("(Admin) FindAllNotifications")
+    public ResponseEntity<List<NotificationResponse>> findAll(@RequestHeader(value = "role", required = false) String role) {
+        try {
+            if (role.equals("admin")) {
+                return new ResponseEntity<>(notificationService.getAllNotifications(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
 }

@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
@@ -28,7 +30,7 @@ public class UserController {
         return new ResponseEntity<>(userService.getByUserId(userId), HttpStatus.OK);
     }
 
-    @GetMapping("/{username}")
+    @GetMapping("/search/{username}")
     @ApiOperation("(Internal) Find user by username for search")
     public ResponseEntity<UserResponse> findUserByUsername(@PathVariable("username") String username) {
         UserResponse userResponse = userService.getByUsername(username);
@@ -36,6 +38,20 @@ public class UserController {
             return new ResponseEntity<>(userService.getByUsername(username), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(null, HttpStatus.OK);
+        }
+    }
+
+    @GetMapping("/admin/findAll")
+    @ApiOperation("(Admin) FindAllUsers")
+    public ResponseEntity<List<UserResponse>> findAll(@RequestHeader(value = "role", required = false) String role) {
+        try {
+            if (role.equals("admin")) {
+                return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
 

@@ -49,4 +49,9 @@ public class BillDetailServiceImpl implements BillDetailService {
 			return false;
 		}
 	}
+
+	@Override
+	public List<BillDetail> getAllBillDetails() {
+		return billDetailRepository.findAll();
+	}
 }

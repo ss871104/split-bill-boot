@@ -24,7 +24,6 @@ public class NotificationServiceImpl implements NotificationService{
 	
 	private final NotificationRepository notificationRepository; //依賴注入中的建構式注入。
 	private final NotificationMapper notificationMapper;
-    
 	
 	@Override
 	public boolean addNewUserNotification(NewUserRequest newUserRequest) {
@@ -120,6 +119,13 @@ public class NotificationServiceImpl implements NotificationService{
 			e.printStackTrace();
 			return false;
 		}
+	}
+
+	@Override
+	public List<NotificationResponse> getAllNotifications() {
+		return notificationRepository.findAll().stream()
+				.map(notificationMapper::notificationToDto)
+				.collect(Collectors.toList());
 	}
 
 }

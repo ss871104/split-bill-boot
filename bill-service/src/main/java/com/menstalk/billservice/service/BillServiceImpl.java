@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Transactional
 public class BillServiceImpl implements BillService {
-
 	private final BillRepository billRepository;
 	private final BillDetailRepository billDetailRepository;
 	private final BillDetailService billDetailService;
@@ -348,7 +347,12 @@ public class BillServiceImpl implements BillService {
 		return true;
 
 	}
-	
+
+	@Override
+	public List<Bill> getAllBills() {
+		return billRepository.findAll();
+	}
+
 
 	@Override
 	public boolean removeBill(Long billId) {

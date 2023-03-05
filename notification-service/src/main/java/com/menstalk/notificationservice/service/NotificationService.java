@@ -13,5 +13,6 @@ public interface NotificationService {
     boolean addNewMemberNotification(NewMemberRequest newMemberRequest);
     List<NotificationResponse> findByUserId(Long userId);
     boolean updateStatus(Long notificationId);
+    List<NotificationResponse> getAllNotifications();
 
 }

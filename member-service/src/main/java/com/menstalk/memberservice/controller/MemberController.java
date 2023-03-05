@@ -20,7 +20,6 @@ import java.util.List;
 //@CrossOrigin
 @Api(tags = "Member Api")
 public class MemberController {
-
 	private final MemberService memberService;
 	
 	@GetMapping("/findUserIdByPartyId/{partyId}")
@@ -112,6 +111,20 @@ public class MemberController {
 			return new ResponseEntity<String>("修改金額成功", HttpStatus.ACCEPTED);
 		} else {
 			return new ResponseEntity<String>("修改金額失敗", HttpStatus.NOT_ACCEPTABLE);
+		}
+	}
+
+	@GetMapping("/admin/findAll")
+	@ApiOperation("(Admin) FindAllMembers")
+	public ResponseEntity<List<Member>> findAll(@RequestHeader(value = "role", required = false) String role) {
+		try {
+			if (role.equals("admin")) {
+				return new ResponseEntity<>(memberService.getAllMembers(), HttpStatus.OK);
+			} else {
+				return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
 		}
 	}
 
