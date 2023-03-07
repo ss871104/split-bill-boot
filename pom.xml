@@ -159,7 +159,7 @@
                             </platform>
                         </platforms>
                     </from>
-                    <to><image>registry.hub.docker.com/ss871104/${artifactId}</image></to>
+                    <to><image>registry.hub.docker.com/ss871104/${project.artifactId}</image></to>
                 </configuration>
             </plugin>
         </plugins>

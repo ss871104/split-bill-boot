@@ -13,22 +13,33 @@ services:
     volumes:
       - ./mysql-data:/var/lib/mysql
       - ./mysql-init:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "--host=mysql", "--user=root", "--password=password", "ping" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
 # Redis
   redis:
-    restart: always
-    container_name: redis
     image: redis:alpine
+    container_name: redis
+    restart: always
     ports:
       - "6379:6379"
     volumes:
       - ./redis-data:/data
       - ./redis-conf:/usr/local/etc/redis/redis.conf
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 1s
+      retries: 5
 
 # Zookeeper
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper
+    restart: always
     ports:
       - "2181:2181"
     environment:
@@ -39,6 +50,7 @@ services:
   kafka:
     image: confluentinc/cp-kafka:latest
     container_name: kafka
+    restart: always
     ports:
       - "9092:9092"
     environment:
@@ -56,25 +68,57 @@ services:
   zipkin:
     image: openzipkin/zipkin
     container_name: zipkin
+    restart: always
     ports:
       - "9411:9411"
+
+# Spring Cloud Config Server
+  config-server:
+    image: ss871104/spring-cloud-config-server:latest
+    container_name: spring-cloud-config-server
+    restart: always
+    pull_policy: always
+    ports:
+      - "8888:8888"
+    environment:
+      - SPRING.ZIPKIN.BASEURL=http://zipkin:9411/
+      - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://eureka-server:8761/eureka
+    depends_on:
+      zipkin:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "http://localhost:8888/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
 # Eureka Server
   eureka-server:
     image: ss871104/eureka-server:latest
     container_name: eureka-server
+    restart: always
     pull_policy: always
     ports:
       - "8761:8761"
     environment:
       - SPRING.ZIPKIN.BASEURL=http://zipkin:9411/
+      - SPRING.CONFIG.IMPORT=optional:configserver:http://spring-cloud-config-server:8888
     depends_on:
-      - zipkin
+      zipkin:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "http://localhost:8761/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
 # Api Gateway
   api-gateway:
     image: ss871104/api-gateway:latest
     container_name: api-gateway
+    restart: always
     pull_policy: always
     ports:
       - "80:80"
@@ -83,91 +127,130 @@ services:
     environment:
       - SPRING.ZIPKIN.BASEURL=http://zipkin:9411/
       - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING.CONFIG.IMPORT=optional:configserver:http://spring-cloud-config-server:8888
     depends_on:
-      - zipkin
-      - eureka-server
+      zipkin:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
 
 # User-Service Docker Compose Config
   user-service:
     image: ss871104/user-service:latest
     container_name: user-service
+    restart: always
     pull_policy: always
     ports:
       - "8000:8000"
     environment:
       - SPRING.ZIPKIN.BASEURL=http://zipkin:9411/
       - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING.CONFIG.IMPORT=optional:configserver:http://spring-cloud-config-server:8888
       - REDIS_HOST=redis
       - REDIS_PORT=6379
     depends_on:
-      - eureka-server
-      - api-gateway
-      - zipkin
-      - redis
+      zipkin:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      db:
+        condition: service_healthy
 
 # Party-Service Docker Compose Config
   party-service:
     image: ss871104/party-service:latest
     container_name: party-service
+    restart: always
     pull_policy: always
     ports:
       - "8100:8100"
     environment:
       - SPRING.ZIPKIN.BASEURL=http://zipkin:9411/
       - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING.CONFIG.IMPORT=optional:configserver:http://spring-cloud-config-server:8888
     depends_on:
-      - eureka-server
-      - api-gateway
-      - zipkin
+      zipkin:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      db:
+        condition: service_healthy
 
 # Member-Service Docker Compose Config
   member-service:
     image: ss871104/member-service:latest
     container_name: member-service
+    restart: always
     pull_policy: always
     ports:
       - "8200:8200"
     environment:
       - SPRING.ZIPKIN.BASEURL=http://zipkin:9411/
       - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING.CONFIG.IMPORT=optional:configserver:http://spring-cloud-config-server:8888
       - SPRING.KAFKA.BOOTSTRAP-SERVERS=kafka:29092
     depends_on:
-      - eureka-server
-      - api-gateway
-      - zipkin
-      - kafka
+      zipkin:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      db:
+        condition: service_healthy
 
 # Bill-Service Docker Compose Config
   bill-service:
     image: ss871104/bill-service:latest
     container_name: bill-service
+    restart: always
     pull_policy: always
     ports:
       - "8300:8300"
     environment:
       - SPRING.ZIPKIN.BASEURL=http://zipkin:9411/
       - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING.CONFIG.IMPORT=optional:configserver:http://spring-cloud-config-server:8888
     depends_on:
-      - eureka-server
-      - api-gateway
-      - zipkin
+      zipkin:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      db:
+        condition: service_healthy
 
   # Notification-Service Docker Compose Config
   notification-service:
     image: ss871104/notification-service:latest
     container_name: notification-service
+    restart: always
     pull_policy: always
     ports:
       - "8400:8400"
     environment:
       - SPRING.ZIPKIN.BASEURL=http://zipkin:9411/
       - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING.CONFIG.IMPORT=optional:configserver:http://spring-cloud-config-server:8888
       - SPRING.KAFKA.BOOTSTRAP-SERVERS=kafka:29092
     depends_on:
-      - eureka-server
-      - api-gateway
-      - zipkin
-      - kafka
+      zipkin:
+        condition: service_healthy
+      eureka-server:
+        condition: service_healthy
+      config-server:
+        condition: service_healthy
+      db:
+        condition: service_healthy
 
 # Prometheus
   prometheus:
