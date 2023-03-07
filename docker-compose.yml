@@ -1,5 +1,30 @@
 version: '3.7'
 services:
+# MySQL
+  db:
+    image: mysql:latest
+    container_name: mysql
+    platform: linux/amd64
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+      - ./mysql-init:/docker-entrypoint-initdb.d
+
+# Redis
+  redis:
+    restart: always
+    container_name: redis
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./redis-data:/data
+      - ./redis-conf:/usr/local/etc/redis/redis.conf
+
 # Zookeeper
   zookeeper:
     image: confluentinc/cp-zookeeper:latest
@@ -26,3 +51,151 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper
+
+# Zipkin
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+
+# Eureka Server
+  eureka-server:
+    image: ss871104/eureka-server:latest
+    container_name: eureka-server
+    pull_policy: always
+    ports:
+      - "8761:8761"
+    environment:
+      - SPRING.ZIPKIN.BASEURL=http://zipkin:9411/
+    depends_on:
+      - zipkin
+
+# Api Gateway
+  api-gateway:
+    image: ss871104/api-gateway:latest
+    container_name: api-gateway
+    pull_policy: always
+    ports:
+      - "80:80"
+    expose:
+      - "80"
+    environment:
+      - SPRING.ZIPKIN.BASEURL=http://zipkin:9411/
+      - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://eureka-server:8761/eureka
+    depends_on:
+      - zipkin
+      - eureka-server
+
+# User-Service Docker Compose Config
+  user-service:
+    image: ss871104/user-service:latest
+    container_name: user-service
+    pull_policy: always
+    ports:
+      - "8000:8000"
+    environment:
+      - SPRING.ZIPKIN.BASEURL=http://zipkin:9411/
+      - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://eureka-server:8761/eureka
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      - eureka-server
+      - api-gateway
+      - zipkin
+      - redis
+
+# Party-Service Docker Compose Config
+  party-service:
+    image: ss871104/party-service:latest
+    container_name: party-service
+    pull_policy: always
+    ports:
+      - "8100:8100"
+    environment:
+      - SPRING.ZIPKIN.BASEURL=http://zipkin:9411/
+      - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://eureka-server:8761/eureka
+    depends_on:
+      - eureka-server
+      - api-gateway
+      - zipkin
+
+# Member-Service Docker Compose Config
+  member-service:
+    image: ss871104/member-service:latest
+    container_name: member-service
+    pull_policy: always
+    ports:
+      - "8200:8200"
+    environment:
+      - SPRING.ZIPKIN.BASEURL=http://zipkin:9411/
+      - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING.KAFKA.BOOTSTRAP-SERVERS=kafka:29092
+    depends_on:
+      - eureka-server
+      - api-gateway
+      - zipkin
+      - kafka
+
+# Bill-Service Docker Compose Config
+  bill-service:
+    image: ss871104/bill-service:latest
+    container_name: bill-service
+    pull_policy: always
+    ports:
+      - "8300:8300"
+    environment:
+      - SPRING.ZIPKIN.BASEURL=http://zipkin:9411/
+      - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://eureka-server:8761/eureka
+    depends_on:
+      - eureka-server
+      - api-gateway
+      - zipkin
+
+  # Notification-Service Docker Compose Config
+  notification-service:
+    image: ss871104/notification-service:latest
+    container_name: notification-service
+    pull_policy: always
+    ports:
+      - "8400:8400"
+    environment:
+      - SPRING.ZIPKIN.BASEURL=http://zipkin:9411/
+      - EUREKA.CLIENT.SERVICEURL.DEFAULTZONE=http://eureka-server:8761/eureka
+      - SPRING.KAFKA.BOOTSTRAP-SERVERS=kafka:29092
+    depends_on:
+      - eureka-server
+      - api-gateway
+      - zipkin
+      - kafka
+
+# Prometheus
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - user-service
+      - party-service
+      - member-service
+      - bill-service
+      - notification-service
+
+# Grafana
+  grafana:
+    image: grafana/grafana
+    container_name: grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    links:
+      - prometheus:prometheus
+    volumes:
+      - ./grafana:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=password

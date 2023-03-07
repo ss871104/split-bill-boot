@@ -24,6 +24,7 @@ public class Member {
 	private Long userId;
 	private Long balance;
 	private String memberNickname;
+	@Enumerated(EnumType.ORDINAL)
 	private MemberStatus memberStatus;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	//是Spring框架中用於解析和格式化日期時間類型的字符串的注解，可以指定日期時間的格式，方便進行操作。

@@ -1,6 +1,7 @@
 package com.menstalk.notificationservice.domain;
 
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ public class Notification {
 	private Long notificationId;
 	private Long userId;
 	private String title;
+	@Type(type="text")
 	private String content;
 	@Enumerated(EnumType.ORDINAL)
 	private NotificationStatus status;
