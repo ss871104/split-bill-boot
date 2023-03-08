@@ -18,6 +18,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+    networks:
+      - menstalk-microservices-network
 
 # Redis
   redis:
@@ -34,6 +36,8 @@ services:
       interval: 5s
       timeout: 1s
       retries: 5
+    networks:
+      - menstalk-microservices-network
 
 # Zookeeper
   zookeeper:
@@ -45,6 +49,8 @@ services:
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    networks:
+      - menstalk-microservices-network
 
 # Kafka
   kafka:
@@ -63,6 +69,8 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper
+    networks:
+      - menstalk-microservices-network
 
 # Zipkin
   zipkin:
@@ -71,6 +79,8 @@ services:
     restart: always
     ports:
       - "9411:9411"
+    networks:
+      - menstalk-microservices-network
 
 # Spring Cloud Config Server
   config-server:
@@ -91,6 +101,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+    networks:
+      - menstalk-microservices-network
 
 # Eureka Server
   eureka-server:
@@ -113,6 +125,8 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+    networks:
+      - menstalk-microservices-network
 
 # Api Gateway
   api-gateway:
@@ -135,6 +149,8 @@ services:
         condition: service_healthy
       config-server:
         condition: service_healthy
+    networks:
+      - menstalk-microservices-network
 
 # User-Service Docker Compose Config
   user-service:
@@ -161,6 +177,8 @@ services:
         condition: service_healthy
       db:
         condition: service_healthy
+    networks:
+      - menstalk-microservices-network
 
 # Party-Service Docker Compose Config
   party-service:
@@ -183,6 +201,8 @@ services:
         condition: service_healthy
       db:
         condition: service_healthy
+    networks:
+      - menstalk-microservices-network
 
 # Member-Service Docker Compose Config
   member-service:
@@ -206,6 +226,8 @@ services:
         condition: service_healthy
       db:
         condition: service_healthy
+    networks:
+      - menstalk-microservices-network
 
 # Bill-Service Docker Compose Config
   bill-service:
@@ -228,6 +250,8 @@ services:
         condition: service_healthy
       db:
         condition: service_healthy
+    networks:
+      - menstalk-microservices-network
 
   # Notification-Service Docker Compose Config
   notification-service:
@@ -251,6 +275,8 @@ services:
         condition: service_healthy
       db:
         condition: service_healthy
+    networks:
+      - menstalk-microservices-network
 
 # Prometheus
   prometheus:
@@ -267,6 +293,8 @@ services:
       - member-service
       - bill-service
       - notification-service
+    networks:
+      - menstalk-microservices-network
 
 # Grafana
   grafana:
@@ -282,3 +310,9 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=password
+    networks:
+      - menstalk-microservices-network
+
+networks:
+  menstalk-microservices-network:
+    driver: bridge
